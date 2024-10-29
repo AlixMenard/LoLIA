@@ -31,6 +31,7 @@
     * earth
     * chemtech
     * hextech
+    * elder
     * *hasSoul*
 - ### Frame data :
   - timeStamp
