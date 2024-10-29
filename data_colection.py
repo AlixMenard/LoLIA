@@ -1,5 +1,7 @@
 import sqlite3
+import json
 from lolesports_api import *
+LOL = Lolesports_API()
 
 def create_table(league):
     connection = sqlite3.connect("matches.db")
@@ -8,11 +10,10 @@ def create_table(league):
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {league} (
         id INTEGER PRIMARY KEY,
-        team1 TEXT,
-        team2 TEXT,
         date DATE,       -- format YYYY-MM-DD
         year INT,
         playoff BOOLEAN,
+        
         time INT,         -- in seconds
         redInhib INT,
         redInhib_5 INT,
@@ -295,21 +296,39 @@ def create_table(league):
     connection.commit()
     connection.close()
 
-leagues = ["lec", "lcs", "lck", "lpl", "worlds", "msi"]
-years = [2022, 2023, 2024]
+def get_match_ids(): #!108176841597230181
+    leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
+    years = [2022, 2023, 2024]
 
-for league in leagues:
-    l = League(league)
-    matches = []
-    for year in years:
-        start_year = f"{year}-01-01"
-        end_year = f"{year}-12-31"
-        tournaments = [t['slug'] for t in l.tournaments if t['startDate']>=start_year and t['endDate']<=end_year]
-        print(tournaments)
-        for t in tournaments:
-            comp = l.getTournamentBySlug(t)
-            #'league': {'name': 'Worlds', 'slug': 'worlds'}
-            print(comp.events)
-            comp.events = [e['match']['id'] for e in comp.events if e['league']['slug']==league]
-            print(comp.events)
-            input()
+    for league in leagues:
+        print(league)
+        l = [i['id'] for i in LOL.get_leagues()['leagues'] if i['slug'] == league][0]
+        matches = []
+        for year in years:
+            #print(year)
+            start_year = f"{year}-01-01"
+            end_year = f"{year}-12-31"
+            tournaments = LOL.get_tournaments_for_league(league_id=l)['leagues'][0]['tournaments']
+            tournaments = [t['id'] for t in tournaments if t['startDate']>=start_year and t['endDate']<=end_year]
+            for t in tournaments:
+                comp = LOL.get_completed_events(tournament_id=t)['schedule']['events']
+                input(comp[0])
+                comp = [i['games'] for i in comp]
+                for event in comp:
+                    for match in event:
+                        matches.append(match['id'])
+        #print("Done")
+    return matches
+
+def get_match(id):
+    print("Getting data")
+    data = downloadDetails(id)
+    i = 0
+    while int(data['frames']['blueTeam'][totalGold]) == 0:
+        i += 1
+    data['frames'] = data['frames'][i:]
+    print("Saving data")
+    with open("gametry.json", "w") as f:
+        json.dump(data, f)
+
+get_match(108176841597230181)
