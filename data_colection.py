@@ -1,7 +1,21 @@
 import sqlite3
 import json
+import datetime
+from copy import deepcopy
+
+from matplotlib.pyplot import connect
+
 from lolesports_api import *
 LOL = Lolesports_API()
+
+def rfc4602datetime(rfc460):
+    time_format = r'%Y-%m-%dT%H:%M:%SZ'
+    time = datetime.datetime.strptime(rfc460.split('.')[0].split('Z')[0] + 'Z', time_format)
+    return time
+
+def datetime2rfc4602(date):
+    time_format = r'%Y-%m-%dT%H:%M:%SZ'
+    time = datetime.datetime.strftime(date, time_format)
 
 def create_table(league):
     connection = sqlite3.connect("matches.db")
@@ -296,6 +310,15 @@ def create_table(league):
     connection.commit()
     connection.close()
 
+def delete_table(league):
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+
+    delete_table_query = f"DROP TABLE IF EXISTS {league};"
+    cursor.execute(delete_table_query)
+    connection.commit()
+    connection.close()
+
 def get_match_ids(): #!108176841597230181
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
@@ -320,15 +343,38 @@ def get_match_ids(): #!108176841597230181
         #print("Done")
     return matches
 
-def get_match(id):
+def load_match(id):
     print("Getting data")
     data = downloadDetails(id)
+    print("Parsing data")
     i = 0
-    while int(data['frames']['blueTeam'][totalGold]) == 0:
+    while int(data['frames'][i]['blueTeam']['totalGold']) == 0:
         i += 1
     data['frames'] = data['frames'][i:]
+
+    start = data['frames'][0]["rfc460Timestamp"]
+    start = rfc4602datetime(start)
+    last_filter = deepcopy(start)
+    filtered_frames = []
+    for i in range(len(data['frames'])):
+        frame_time = data['frames'][i]["rfc460Timestamp"]
+        frame_time = rfc4602datetime(frame_time)
+        delta = frame_time - start
+        in_game_time = delta.total_seconds()
+        data['frames'][i]["inGameTime"] = int(in_game_time)
+
+        diff = int((frame_time - last_filter).total_seconds())
+        if diff and diff % 10 == 0:
+            filtered_frames.append(data['frames'][i])
+            last_filter = frame_time
+    data['frames'] = filtered_frames
+
     print("Saving data")
     with open("gametry.json", "w") as f:
-        json.dump(data, f)
+        json.dump(data, f, indent = 3)
 
-get_match(108176841597230181)
+def save_match(id):
+    pass
+
+if __name__ == "__main__":
+    load_match(108176841597230181)
