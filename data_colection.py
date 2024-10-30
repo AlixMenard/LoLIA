@@ -43,6 +43,7 @@ def create_table(league):
         redBarons INT,
         redBarons_5 INT,
         redDragons INT,
+        redDragons_5 INT,
         redInfernals INT,
         redClouds INT,
         redOceans INT,
@@ -354,7 +355,11 @@ def get_match_ids(league, year): #!108176841597230181
 
 def load_match(id):
     #print("Getting data")
-    data = downloadDetails(id)
+    try:
+        data = downloadDetails(id)
+    except:
+        print(id)
+        return
     #print("Parsing data")
     i = 0
     while int(data['frames'][i]['blueTeam']['totalGold']) == 0:
@@ -378,6 +383,8 @@ def load_match(id):
             last_filter = frame_time
     data['frames'] = filtered_frames
 
+    #print(data['frames'][-1]['blueTeam']['dragons'])
+    #print(data['frames'][-1]['redTeam']['dragons'])
 
     """print("Saving data")
     with open("gametry.json", "w") as f:
@@ -395,10 +402,80 @@ def save_match(id, is_PO):
     metadata['year'] = int(metadata['date'][:4])
     metadata['playoff'] = is_PO
 
+    new_frames = []
+    start_index = 0
+    while frames[start_index]['inGameTime'] < 10*60:
+        start_index += 1
+
+    for i, frame in enumerate(frames):
+        if i<start_index:
+            continue
+        nf = {'date' : metadata['date'], 'year' : metadata['year'], 'playoff' : metadata['playoff'], 'time' : frame['inGameTime']}
+        for c in ["red", "blue"]:
+            nf[f'{c}Inhib'] = frame[f'{c}Team']['inhibitors']
+            nf[f'{c}Inhib_5'] = frame[f'{c}Team']['inhibitors'] - frames[i-5*6][f'{c}Team']['inhibitors']
+            nf[f'{c}Towers'] = frame[f'{c}Team']['towers']
+            nf[f'{c}Towers_5'] = frame[f'{c}Team']['towers'] - frames[i-5*6][f'{c}Team']['towers']
+            nf[f'{c}Barons'] = frame[f'{c}Team']['barons']
+            nf[f'{c}Barons_5'] = frame[f'{c}Team']['barons'] - frames[i-5*6][f'{c}Team']
+            nf[f'{c}Dragons'] = len(frame[f'{c}Team']['dragons'])
+            nf[f'{c}Dragons_5'] = len(frame[f'{c}Team']['dragons']) - len(frames[i-5*6][f'{c}Team']['dragons'])
+            nf[f'{c}Infernals'] = frame[f'{c}Team']['dragons'].count("infernal")
+            nf[f'{c}Clouds'] = frame[f'{c}Team']['dragons'].count("cloud")
+            nf[f'{c}Oceans'] = frame[f'{c}Team']['dragons'].count("ocean")
+            nf[f'{c}Mountains'] = frame[f'{c}Team']['dragons'].count("mountain")
+            nf[f'{c}Chemtechs'] = frame[f'{c}Team']['dragons'].count("chemtech")
+            nf[f'{c}Hextechs'] = frame[f'{c}Team']['dragons'].count("hextech")
+            nf[f'{c}Elders'] = frame[f'{c}Team']['dragons'].count("elder")
+            nf[f'{c}Elders_5'] = frame[f'{c}Team']['dragons'].count("elder") - frames[i-5*6][f'{c}Team']['dragons'].count("elder")
+
+            for pid, role in enumerate(["Top", "Jungle", "Mid", "Bot", "Supp"]):
+                nf[f'{c}{role}Kills'] = frame[f'{c}Team']['participants'][pid]['kills']
+                nf[f'{c}{role}Kills_5'] = frame[f'{c}Team']['participants'][pid]['kills'] - frames[i-5*6][f'{c}Team']['participants'][pid]['kills']
+                nf[f'{c}{role}Deaths'] = frame[f'{c}Team']['participants'][pid]['deaths']
+                nf[f'{c}{role}Deaths_5'] = frame[f'{c}Team']['participants'][pid]['deaths'] - frames[i-5*6][f'{c}Team']['participants'][pid]['deaths']
+                nf[f'{c}{role}Assists'] = frame[f'{c}Team']['participants'][pid]['assists']
+                nf[f'{c}{role}Assists_5'] = frame[f'{c}Team']['participants'][pid]['assists']- frames[i-5*6][f'{c}Team']['participants'][pid]['assists']
+                nf[f'{c}{role}Golds'] = frame[f'{c}Team']['participants'][pid]['totalGold']
+                nf[f'{c}{role}Golds_5'] = frame[f'{c}Team']['participants'][pid]['totalGold']- frames[i-5*6][f'{c}Team']['participants'][pid]['totalGold']
+                nf[f'{c}{role}Level'] = frame[f'{c}Team']['participants'][pid]['level']
+                nf[f'{c}{role}CS'] = frame[f'{c}Team']['participants'][pid]['creepScore']
+                nf[f'{c}{role}Health'] = frame[f'{c}Team']['participants'][pid]['currentHealth']
+                nf[f'{c}{role}MaxHealth'] = frame[f'{c}Team']['participants'][pid]['maxHealth']
+                nf[f'{c}{role}KP'] = frame[f'{c}Team']['participants'][pid]['killParticipation']
+                nf[f'{c}{role}WardsPlaced'] = frame[f'{c}Team']['participants'][pid]['wardsPlaced']
+                nf[f'{c}{role}WardsDestroyed'] = frame[f'{c}Team']['participants'][pid]['wardsDestroyed']
+                nf[f'{c}{role}AD'] = frame[f'{c}Team']['participants'][pid]['attackDamage']
+                nf[f'{c}{role}AP'] = frame[f'{c}Team']['participants'][pid]['abilityPower']
+                nf[f'{c}{role}Crit'] = frame[f'{c}Team']['participants'][pid]['criticalChance']
+                nf[f'{c}{role}AS'] = frame[f'{c}Team']['participants'][pid]['attackSpeed']
+                nf[f'{c}{role}LifeSteal'] = frame[f'{c}Team']['participants'][pid]['lifeSteal']
+                nf[f'{c}{role}MR'] = frame[f'{c}Team']['participants'][pid]['magicResistance']
+                nf[f'{c}{role}Armor'] = frame[f'{c}Team']['participants'][pid]['armor']
+                nf[f'{c}{role}Tenacity'] = frame[f'{c}Team']['participants'][pid]['tenacity']
+                nf[f'{c}{role}DamageShare'] = frame[f'{c}Team']['participants'][pid]['items']
+
+        new_frames.append(nf)
+
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+
+    columns = ", ".join(new_frames[0].keys())
+    placeholders = ", ".join("?" * len(new_frames[0]))
+    insert_sql = f"INSERT INTO {league} ({columns}) VALUES ({placeholders})"
+
+    for frame in new_frames:
+        values = tuple(frame.values())
+        cursor.execute(insert_sql, values)
+
+    conn.commit()
+
+
 
 if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
-    m = get_match_ids(leagues[1], years[2])
+    m = get_match_ids(leagues[0], years[2])
     for i in m:
-        print(i)
+        save_match(i[0])
+        print("-"*10)
