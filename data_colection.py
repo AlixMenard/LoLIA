@@ -16,6 +16,13 @@ def rfc4602datetime(rfc460):
 def datetime2rfc4602(date):
     time_format = r'%Y-%m-%dT%H:%M:%SZ'
     time = datetime.datetime.strftime(date, time_format)
+    return time
+
+def datetime2iso(date):
+    time_format = r'%Y-%m-%d'
+    time = datetime.datetime.strftime(date, time_format)
+    return time
+
 
 def create_table(league):
     connection = sqlite3.connect("matches.db")
@@ -34,13 +41,16 @@ def create_table(league):
         redTowers INT,
         redTowers_5 INT,
         redBarons INT,
+        redBarons_5 INT,
         redDragons INT,
         redInfernals INT,
         redClouds INT,
         redOceans INT,
         redMountains INT,
         redChemtechs INT,
-        redHextechs INT
+        redHextechs INT,
+        redElders INT,
+        redElders_5 INT,
         blueInhib INT,
         blueInhib_5 INT,
         blueTowers INT,
@@ -53,6 +63,8 @@ def create_table(league):
         blueMountains INT,
         blueChemtechs INT,
         blueHextechs INT,
+        blueElders INT,
+        blueElders_5 INT,
         
         redTopKills INT,
         redTopKills_5 INT,
@@ -65,7 +77,7 @@ def create_table(league):
         redTopLevel INT,
         redTopCS INT,
         redTopHealth INT,
-        redTopmaxHeath INT,
+        redTopMaxHealth INT,
         redTopKP REAL
         redTopWardsPlaced INT,
         redTopWardsDestroyed INT,
@@ -90,7 +102,7 @@ def create_table(league):
         redJungleLevel INT,
         redJungleCS INT,
         redJungleHealth INT,
-        redJunglemaxHeath INT,
+        redJungleMaxHealth INT,
         redJungleKP REAL
         redJungleWardsPlaced INT,
         redJungleWardsDestroyed INT,
@@ -115,7 +127,7 @@ def create_table(league):
         redMidLevel INT,
         redMidCS INT,
         redMidHealth INT,
-        redMidmaxHeath INT,
+        redMidMaxHealth INT,
         redMidKP REAL
         redMidWardsPlaced INT,
         redMidWardsDestroyed INT,
@@ -140,7 +152,7 @@ def create_table(league):
         redBotLevel INT,
         redBotCS INT,
         redBotHealth INT,
-        redBotmaxHeath INT,
+        redBotMaxHealth INT,
         redBotKP REAL
         redBotWardsPlaced INT,
         redBotWardsDestroyed INT,
@@ -165,7 +177,7 @@ def create_table(league):
         redSuppLevel INT,
         redSuppCS INT,
         redSuppHealth INT,
-        redSuppmaxHeath INT,
+        redSuppMaxHealth INT,
         redSuppKP REAL
         redSuppWardsPlaced INT,
         redSuppWardsDestroyed INT,
@@ -190,7 +202,7 @@ def create_table(league):
         blueTopLevel INT,
         blueTopCS INT,
         blueTopHealth INT,
-        blueTopmaxHeath INT,
+        blueTopMaxHealth INT,
         blueTopKP REAL
         blueTopWardsPlaced INT,
         blueTopWardsDestroyed INT,
@@ -215,7 +227,7 @@ def create_table(league):
         blueJungleLevel INT,
         blueJungleCS INT,
         blueJungleHealth INT,
-        blueJunglemaxHeath INT,
+        blueJungleMaxHealth INT,
         blueJungleKP REAL
         blueJungleWardsPlaced INT,
         blueJungleWardsDestroyed INT,
@@ -240,7 +252,7 @@ def create_table(league):
         blueMidLevel INT,
         blueMidCS INT,
         blueMidHealth INT,
-        blueMidmaxHeath INT,
+        blueMidMaxHealth INT,
         blueMidKP REAL
         blueMidWardsPlaced INT,
         blueMidWardsDestroyed INT,
@@ -265,7 +277,7 @@ def create_table(league):
         blueBotLevel INT,
         blueBotCS INT,
         blueBotHealth INT,
-        blueBotmaxHeath INT,
+        blueBotMaxHealth INT,
         blueBotKP REAL
         blueBotWardsPlaced INT,
         blueBotWardsDestroyed INT,
@@ -290,7 +302,7 @@ def create_table(league):
         blueSuppLevel INT,
         blueSuppCS INT,
         blueSuppHealth INT,
-        blueSuppmaxHeath INT,
+        blueSuppMaxHealth INT,
         blueSuppKP REAL
         blueSuppWardsPlaced INT,
         blueSuppWardsDestroyed INT,
@@ -319,34 +331,31 @@ def delete_table(league):
     connection.commit()
     connection.close()
 
-def get_match_ids(): #!108176841597230181
-    leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
-    years = [2022, 2023, 2024]
+def get_match_ids(league, year): #!108176841597230181
+    #print(league)
+    l = [i['id'] for i in LOL.get_leagues()['leagues'] if i['slug'] == league][0]
+    matches = []
 
-    for league in leagues:
-        print(league)
-        l = [i['id'] for i in LOL.get_leagues()['leagues'] if i['slug'] == league][0]
-        matches = []
-        for year in years:
-            #print(year)
-            start_year = f"{year}-01-01"
-            end_year = f"{year}-12-31"
-            tournaments = LOL.get_tournaments_for_league(league_id=l)['leagues'][0]['tournaments']
-            tournaments = [t['id'] for t in tournaments if t['startDate']>=start_year and t['endDate']<=end_year]
-            for t in tournaments:
-                comp = LOL.get_completed_events(tournament_id=t)['schedule']['events']
-                input(comp[0])
-                comp = [i['games'] for i in comp]
-                for event in comp:
-                    for match in event:
-                        matches.append(match['id'])
-        #print("Done")
+    #print(year)
+    start_year = f"{year}-01-01"
+    end_year = f"{year}-12-31"
+    tournaments = LOL.get_tournaments_for_league(league_id=l)['leagues'][0]['tournaments']
+    tournaments = [t['id'] for t in tournaments if t['startDate']>=start_year and t['endDate']<=end_year]
+    for t in tournaments:
+        comp = LOL.get_completed_events(tournament_id=t)['schedule']['events']
+        #input(comp[0])
+        block = [i['blockName'] for i in comp]
+        comp = [i['games'] for i in comp]
+        for i,event in enumerate(comp):
+            for match in event:
+                matches.append((match['id'], block[i] in ['Playoffs', 'Finals', 'Knockouts', 'Quarterfinals', 'Semifinals']))
+    #print("Done")
     return matches
 
 def load_match(id):
-    print("Getting data")
+    #print("Getting data")
     data = downloadDetails(id)
-    print("Parsing data")
+    #print("Parsing data")
     i = 0
     while int(data['frames'][i]['blueTeam']['totalGold']) == 0:
         i += 1
@@ -369,12 +378,27 @@ def load_match(id):
             last_filter = frame_time
     data['frames'] = filtered_frames
 
-    print("Saving data")
-    with open("gametry.json", "w") as f:
-        json.dump(data, f, indent = 3)
 
-def save_match(id):
-    pass
+    """print("Saving data")
+    with open("gametry.json", "w") as f:
+        json.dump(data, f, indent = 3)"""
+
+    return data
+
+
+def save_match(id, is_PO):
+    data = load_match(id)
+    frames = data['frames']
+    f0 = frames[0]
+
+    metadata['date'] = datetime2iso(rfc4602datetime(f0['rfc460Timestamp']))
+    metadata['year'] = int(metadata['date'][:4])
+    metadata['playoff'] = is_PO
+
 
 if __name__ == "__main__":
-    load_match(108176841597230181)
+    leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
+    years = [2022, 2023, 2024]
+    m = get_match_ids(leagues[1], years[2])
+    for i in m:
+        print(i)
