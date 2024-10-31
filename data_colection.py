@@ -507,10 +507,12 @@ def save_match(id, is_PO, league):
 if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
-    m = get_match_ids(leagues[1], years[2])
-    print("IDs retrieved.")
-    for i in m:
-        save_match(i[0], i[1], leagues[1])
-        print("-"*10)
+    for l in leagues:
+        for y in years:
+            m = get_match_ids(l, y)
+            print("IDs retrieved.")
+            for i in m:
+                save_match(i[0], i[1], l)
+                print("-"*10)
 
 # 31/10 started LEC 2024
