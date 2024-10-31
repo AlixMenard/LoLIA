@@ -508,6 +508,7 @@ if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
     for l in leagues:
+        create_table(l)
         for y in years:
             m = get_match_ids(l, y)
             print("IDs retrieved.")
