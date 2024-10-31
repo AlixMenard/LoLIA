@@ -2,6 +2,7 @@ import sqlite3
 import json
 import datetime
 from copy import deepcopy
+from importlib.metadata import metadata
 
 from matplotlib.pyplot import connect
 
@@ -31,6 +32,7 @@ def create_table(league):
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {league} (
         id INTEGER PRIMARY KEY,
+        gameId INTEGER,
         date DATE,       -- format YYYY-MM-DD
         year INT,
         playoff BOOLEAN,
@@ -57,7 +59,9 @@ def create_table(league):
         blueTowers INT,
         blueTowers_5 INT,
         blueBarons INT,
+        blueBarons_5 INT,
         blueDragons INT,
+        blueDragons_5 INT,
         blueInfernals INT,
         blueClouds INT,
         blueOceans INT,
@@ -79,7 +83,7 @@ def create_table(league):
         redTopCS INT,
         redTopHealth INT,
         redTopMaxHealth INT,
-        redTopKP REAL
+        redTopKP REAL,
         redTopWardsPlaced INT,
         redTopWardsDestroyed INT,
         redTopAD INT,
@@ -90,7 +94,7 @@ def create_table(league):
         redTopMR INT,
         redTopArmor INT,
         redTopTenacity INT,
-        redTopDamageShare REAL
+        redTopDamageShare REAL,
         
         redJungleKills INT,
         redJungleKills_5 INT,
@@ -104,7 +108,7 @@ def create_table(league):
         redJungleCS INT,
         redJungleHealth INT,
         redJungleMaxHealth INT,
-        redJungleKP REAL
+        redJungleKP REAL,
         redJungleWardsPlaced INT,
         redJungleWardsDestroyed INT,
         redJungleAD INT,
@@ -115,7 +119,7 @@ def create_table(league):
         redJungleMR INT,
         redJungleArmor INT,
         redJungleTenacity INT,
-        redJungleDamageShare REAL
+        redJungleDamageShare REAL,
         
         redMidKills INT,
         redMidKills_5 INT,
@@ -129,7 +133,7 @@ def create_table(league):
         redMidCS INT,
         redMidHealth INT,
         redMidMaxHealth INT,
-        redMidKP REAL
+        redMidKP REAL,
         redMidWardsPlaced INT,
         redMidWardsDestroyed INT,
         redMidAD INT,
@@ -140,7 +144,7 @@ def create_table(league):
         redMidMR INT,
         redMidArmor INT,
         redMidTenacity INT,
-        redMidDamageShare REAL
+        redMidDamageShare REAL,
         
         redBotKills INT,
         redBotKills_5 INT,
@@ -154,7 +158,7 @@ def create_table(league):
         redBotCS INT,
         redBotHealth INT,
         redBotMaxHealth INT,
-        redBotKP REAL
+        redBotKP REAL,
         redBotWardsPlaced INT,
         redBotWardsDestroyed INT,
         redBotAD INT,
@@ -165,7 +169,7 @@ def create_table(league):
         redBotMR INT,
         redBotArmor INT,
         redBotTenacity INT,
-        redBotDamageShare REAL
+        redBotDamageShare REAL,
         
         redSuppKills INT,
         redSuppKills_5 INT,
@@ -179,7 +183,7 @@ def create_table(league):
         redSuppCS INT,
         redSuppHealth INT,
         redSuppMaxHealth INT,
-        redSuppKP REAL
+        redSuppKP REAL,
         redSuppWardsPlaced INT,
         redSuppWardsDestroyed INT,
         redSuppAD INT,
@@ -190,7 +194,7 @@ def create_table(league):
         redSuppMR INT,
         redSuppArmor INT,
         redSuppTenacity INT,
-        redSuppDamageShare REAL
+        redSuppDamageShare REAL,
         
         blueTopKills INT,
         blueTopKills_5 INT,
@@ -204,7 +208,7 @@ def create_table(league):
         blueTopCS INT,
         blueTopHealth INT,
         blueTopMaxHealth INT,
-        blueTopKP REAL
+        blueTopKP REAL,
         blueTopWardsPlaced INT,
         blueTopWardsDestroyed INT,
         blueTopAD INT,
@@ -215,7 +219,7 @@ def create_table(league):
         blueTopMR INT,
         blueTopArmor INT,
         blueTopTenacity INT,
-        blueTopDamageShare REAL
+        blueTopDamageShare REAL,
         
         blueJungleKills INT,
         blueJungleKills_5 INT,
@@ -229,7 +233,7 @@ def create_table(league):
         blueJungleCS INT,
         blueJungleHealth INT,
         blueJungleMaxHealth INT,
-        blueJungleKP REAL
+        blueJungleKP REAL,
         blueJungleWardsPlaced INT,
         blueJungleWardsDestroyed INT,
         blueJungleAD INT,
@@ -240,7 +244,7 @@ def create_table(league):
         blueJungleMR INT,
         blueJungleArmor INT,
         blueJungleTenacity INT,
-        blueJungleDamageShare REAL
+        blueJungleDamageShare REAL,
         
         blueMidKills INT,
         blueMidKills_5 INT,
@@ -254,7 +258,7 @@ def create_table(league):
         blueMidCS INT,
         blueMidHealth INT,
         blueMidMaxHealth INT,
-        blueMidKP REAL
+        blueMidKP REAL,
         blueMidWardsPlaced INT,
         blueMidWardsDestroyed INT,
         blueMidAD INT,
@@ -265,7 +269,7 @@ def create_table(league):
         blueMidMR INT,
         blueMidArmor INT,
         blueMidTenacity INT,
-        blueMidDamageShare REAL
+        blueMidDamageShare REAL,
         
         blueBotKills INT,
         blueBotKills_5 INT,
@@ -279,7 +283,7 @@ def create_table(league):
         blueBotCS INT,
         blueBotHealth INT,
         blueBotMaxHealth INT,
-        blueBotKP REAL
+        blueBotKP REAL,
         blueBotWardsPlaced INT,
         blueBotWardsDestroyed INT,
         blueBotAD INT,
@@ -290,7 +294,7 @@ def create_table(league):
         blueBotMR INT,
         blueBotArmor INT,
         blueBotTenacity INT,
-        blueBotDamageShare REAL
+        blueBotDamageShare REAL,
         
         blueSuppKills INT,
         blueSuppKills_5 INT,
@@ -304,7 +308,7 @@ def create_table(league):
         blueSuppCS INT,
         blueSuppHealth INT,
         blueSuppMaxHealth INT,
-        blueSuppKP REAL
+        blueSuppKP REAL,
         blueSuppWardsPlaced INT,
         blueSuppWardsDestroyed INT,
         blueSuppAD INT,
@@ -393,14 +397,31 @@ def load_match(id):
     return data
 
 
-def save_match(id, is_PO):
+def save_match(id, is_PO, league):
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+    sql = f"SELECT * FROM game_ids WHERE id={id}"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    connection.close()
+    if len(results) > 0:
+        return
+
     data = load_match(id)
-    frames = data['frames']
+    if data is None:
+        return
+
+    try:
+        frames = data['frames']
+    except:
+        print(data)
     f0 = frames[0]
 
+    metadata = {}
     metadata['date'] = datetime2iso(rfc4602datetime(f0['rfc460Timestamp']))
     metadata['year'] = int(metadata['date'][:4])
     metadata['playoff'] = is_PO
+    print(metadata['date'])
 
     new_frames = []
     start_index = 0
@@ -410,14 +431,14 @@ def save_match(id, is_PO):
     for i, frame in enumerate(frames):
         if i<start_index:
             continue
-        nf = {'date' : metadata['date'], 'year' : metadata['year'], 'playoff' : metadata['playoff'], 'time' : frame['inGameTime']}
+        nf = {'gameId': id, 'date' : metadata['date'], 'year' : metadata['year'], 'playoff' : metadata['playoff'], 'time' : frame['inGameTime']}
         for c in ["red", "blue"]:
             nf[f'{c}Inhib'] = frame[f'{c}Team']['inhibitors']
             nf[f'{c}Inhib_5'] = frame[f'{c}Team']['inhibitors'] - frames[i-5*6][f'{c}Team']['inhibitors']
             nf[f'{c}Towers'] = frame[f'{c}Team']['towers']
             nf[f'{c}Towers_5'] = frame[f'{c}Team']['towers'] - frames[i-5*6][f'{c}Team']['towers']
             nf[f'{c}Barons'] = frame[f'{c}Team']['barons']
-            nf[f'{c}Barons_5'] = frame[f'{c}Team']['barons'] - frames[i-5*6][f'{c}Team']
+            nf[f'{c}Barons_5'] = frame[f'{c}Team']['barons'] - frames[i-5*6][f'{c}Team']['barons']
             nf[f'{c}Dragons'] = len(frame[f'{c}Team']['dragons'])
             nf[f'{c}Dragons_5'] = len(frame[f'{c}Team']['dragons']) - len(frames[i-5*6][f'{c}Team']['dragons'])
             nf[f'{c}Infernals'] = frame[f'{c}Team']['dragons'].count("infernal")
@@ -453,7 +474,7 @@ def save_match(id, is_PO):
                 nf[f'{c}{role}MR'] = frame[f'{c}Team']['participants'][pid]['magicResistance']
                 nf[f'{c}{role}Armor'] = frame[f'{c}Team']['participants'][pid]['armor']
                 nf[f'{c}{role}Tenacity'] = frame[f'{c}Team']['participants'][pid]['tenacity']
-                nf[f'{c}{role}DamageShare'] = frame[f'{c}Team']['participants'][pid]['items']
+                nf[f'{c}{role}DamageShare'] = frame[f'{c}Team']['participants'][pid]['championDamageShare']
 
         new_frames.append(nf)
 
@@ -465,17 +486,29 @@ def save_match(id, is_PO):
     insert_sql = f"INSERT INTO {league} ({columns}) VALUES ({placeholders})"
 
     for frame in new_frames:
+        for key in frame.keys():
+            if type(frame[key]) == list:
+                print(key, frame[key])
         values = tuple(frame.values())
         cursor.execute(insert_sql, values)
 
-    conn.commit()
+    connection.commit()
+    connection.close()
+
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+    sql = f"INSERT INTO game_ids (id) VALUES ({id})"
+    cursor.execute(sql)
+    connection.commit()
+    connection.close()
 
 
 
 if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
-    m = get_match_ids(leagues[0], years[2])
+    m = get_match_ids(leagues[1], years[2])
+    print("IDs retrieved.")
     for i in m:
-        save_match(i[0])
+        save_match(i[0], i[1], leagues[1])
         print("-"*10)
