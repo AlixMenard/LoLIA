@@ -398,17 +398,14 @@ def load_match(id):
 
 
 def save_match(id, is_PO, league):
-    connection = sqlite3.connect("matches.db")
-    cursor = connection.cursor()
-    sql = f"SELECT * FROM game_ids WHERE id={id}"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    connection.close()
-    if len(results) > 0:
-        return
-
     data = load_match(id)
     if data is None:
+        connection = sqlite3.connect("matches.db")
+        cursor = connection.cursor()
+        sql = f"INSERT INTO game_ids (id) VALUES ({id})"
+        cursor.execute(sql)
+        connection.commit()
+        connection.close()
         return
 
     try:
@@ -502,20 +499,40 @@ def save_match(id, is_PO, league):
     connection.commit()
     connection.close()
 
-
+def found():
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+    sql = f"SELECT id FROM game_ids"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    connection.close()
+    return results
 
 if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
+    done_ids = found()
+    done_ids = [i[0] for i in done_ids]
+    print("Got saved.")
+
     for l in leagues:
-        print(l)
+        print(l, flush=True)
         create_table(l)
         for y in years:
-            print(f"\t{y}... ", end = "")
+            print(f"\t{y}... ", end = "", flush=True)
             m = get_match_ids(l, y)
-            print("IDs retrieved... ", end = "")
+            print("IDs retrieved... ", end = "", flush=True)
+            skipped = done = 0
+            nb_ids = len(m)
             for i in m:
-                save_match(i[0], i[1], l)
-            print("Done")
+                if not int(i[0]) in done_ids:
+                    save_match(i[0], i[1], l)
+                    done += 1
+                else:
+                    done += 1
+                    skipped += 1
+                    print(end="\r")
+                    print(f"\t{y}... IDs retrieved... {done}/{nb_ids}, skipped {skipped}/{done}.", end = "", flush=True)
+            print("Done", flush=True)
 
 # 31/10 started LEC 2024
