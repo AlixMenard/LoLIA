@@ -362,7 +362,7 @@ def load_match(id):
     try:
         data = downloadDetails(id)
     except:
-        print(id)
+        #print(e)
         return
     #print("Parsing data")
     i = 0
@@ -421,7 +421,7 @@ def save_match(id, is_PO, league):
     metadata['date'] = datetime2iso(rfc4602datetime(f0['rfc460Timestamp']))
     metadata['year'] = int(metadata['date'][:4])
     metadata['playoff'] = is_PO
-    print(metadata['date'])
+    #print(metadata['date'])
 
     new_frames = []
     start_index = 0
@@ -508,12 +508,14 @@ if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
     for l in leagues:
+        print(l)
         create_table(l)
         for y in years:
+            print(f"\t{y}... ", end = "")
             m = get_match_ids(l, y)
-            print("IDs retrieved.")
+            print("IDs retrieved... ", end = "")
             for i in m:
                 save_match(i[0], i[1], l)
-                print("-"*10)
+            print("Done")
 
 # 31/10 started LEC 2024
