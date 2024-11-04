@@ -531,8 +531,8 @@ if __name__ == "__main__":
                 else:
                     done += 1
                     skipped += 1
-                    print(end="\r")
-                    print(f"\t{y}... IDs retrieved... {done}/{nb_ids}, skipped {skipped}/{done}.", end = "", flush=True)
+                print(end="\r")
+                print(f"\t{y}... IDs retrieved... {done}/{nb_ids}, skipped {skipped}/{done}.", end = "", flush=True)
             print("Done", flush=True)
 
 # 31/10 started LEC 2024
