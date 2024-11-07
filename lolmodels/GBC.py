@@ -19,7 +19,7 @@ class GBC:
         X_train, y_train = train_set[:,1:], train_set[:,0]
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
-        #? n_estimators !
+        #? n_estimators ! 500
         x = [10,50,100,200,500,1000,5000,10000]
         accuracy = []
         for n in x:
