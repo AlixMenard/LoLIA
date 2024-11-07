@@ -36,6 +36,7 @@ def create_table(league):
         date DATE,       -- format YYYY-MM-DD
         year INT,
         playoff BOOLEAN,
+        win INT,          -- 1 for blue team, 0 for red
         
         time INT,         -- in seconds
         redInhib INT,
@@ -370,6 +371,7 @@ def load_match(id):
         i += 1
     data['frames'] = data['frames'][i:]
 
+
     start = data['frames'][0]["rfc460Timestamp"]
     start = rfc4602datetime(start)
     last_filter = deepcopy(start)
@@ -386,6 +388,7 @@ def load_match(id):
             filtered_frames.append(data['frames'][i])
             last_filter = frame_time
     data['frames'] = filtered_frames
+
 
     #print(data['frames'][-1]['blueTeam']['dragons'])
     #print(data['frames'][-1]['redTeam']['dragons'])
@@ -475,6 +478,15 @@ def save_match(id, is_PO, league):
 
         new_frames.append(nf)
 
+
+    deciding_frame = new_frames[-1]
+    more_inhibs = deciding_frame['blueInhib'] >= deciding_frame['redInhib']
+    more_barons_5 = deciding_frame['blueBarons_5'] >= deciding_frame['redBarons_5']
+    more_golds = sum(deciding_frame[f'blue{r}Golds'] for r in ["Top", "Jungle", "Mid", "Bot", "Supp"]) >= sum(deciding_frame[f'red{r}Golds'] for r in ["Top", "Jungle", "Mid", "Bot", "Supp"])
+    Win = int(sum([more_inhibs, more_golds, more_barons_5]) >= 2)
+    for f in new_frames:
+        f['win'] = Win
+
     connection = sqlite3.connect("matches.db")
     cursor = connection.cursor()
 
@@ -511,6 +523,7 @@ def found():
 if __name__ == "__main__":
     leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
+    years.reverse()
     done_ids = found()
     done_ids = [i[0] for i in done_ids]
     print("Got saved.")
