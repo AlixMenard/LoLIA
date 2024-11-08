@@ -20,7 +20,7 @@ class GBC:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         #? n_estimators ! 500
-        """x = [10,50,100,200,500,1000,5000,10000]
+        """x = list(range(200,900,100))
         accuracy = []
         for n in x:
             print(n)
@@ -31,10 +31,10 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()
+        plt.show()"""
 
         #? learning_rate !
-        x = list(i/ 10 for i in range(1, 10, 1))
+        x = list(i/ 100 for i in range(35, 70, 5))
         accuracy = []
         for n in x:
             print(n)
@@ -47,8 +47,8 @@ class GBC:
         plt.plot(x, accuracy)
         plt.show()
 
-        #? max_depth !
-        x = list(range(1, 15, 1))
+        #? max_depth ! 6
+        """x = list(range(1, 15, 1))
         accuracy = []
         for n in x:
             print(n)
@@ -59,10 +59,10 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()
+        plt.show()"""
 
-        #? subsample !
-        x = list(i/ 10 for i in range(1, 10, 1))
+        #? subsample ! 1
+        """x = list(i/ 10 for i in range(1, 10, 1))
         accuracy = []
         for n in x:
             print(n)
@@ -73,4 +73,4 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()
+        plt.show()"""
