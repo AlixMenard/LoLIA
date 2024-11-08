@@ -31,7 +31,7 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()
 
         #? learning_rate !
         x = list(i/ 10 for i in range(1, 10, 1))
