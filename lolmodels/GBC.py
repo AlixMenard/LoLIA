@@ -19,8 +19,8 @@ class GBC:
         X_train, y_train = train_set[:,1:], train_set[:,0]
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
-        #? n_estimators !
-        x = [10,50,100,200,500,1000,5000,10000]
+        #? n_estimators ! 500
+        """x = [10,50,100,200,500,1000,5000,10000]
         accuracy = []
         for n in x:
             print(n)
@@ -31,7 +31,7 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()
+        plt.show()"""
 
         #? learning_rate !
         x = list(i/ 10 for i in range(1, 10, 1))
