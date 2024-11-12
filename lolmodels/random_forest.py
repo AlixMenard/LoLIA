@@ -7,6 +7,9 @@ class RandomForest:
         return RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state, max_features=max_features)
 
     def train(self, forest, train_set, validation_set):
+        np.random.shuffle(train_set)
+        np.random.shuffle(validation_set)
+
         X_train, y_train = train_set[:,1:], train_set[:,0]
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
@@ -18,7 +21,7 @@ class RandomForest:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         #? n_estimators ! 10000
-        """x = list(range(5000, 16000, 1000))
+        x = list(range(8000, 12000, 1000))
         accuracy = []
         for n in x:
             print(n)
@@ -26,10 +29,10 @@ class RandomForest:
             forest.fit(X_train, y_train)
             accuracy.append(forest.score(X_val, y_val))
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()
 
         #? max_depth ! 13
-        """x = list(range(10, 20, 1))
+        x = list(range(11, 16, 1))
         accuracy = []
         for n in x:
             print(n)
@@ -40,10 +43,10 @@ class RandomForest:
                 score += forest.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()
 
         #? max_features ! 0.9
-        """x = [0.85, 0.9, 0.95]
+        x = [0.85, 0.9, 0.95, 1]
         accuracy = []
         for n in x:
             print(n)
@@ -54,4 +57,4 @@ class RandomForest:
                 score += forest.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()

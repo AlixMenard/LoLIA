@@ -1,14 +1,18 @@
 from sklearn.ensemble import GradientBoostingClassifier
 import matplotlib.pyplot as plt
 from torch.ao.nn.quantized import Dropout
+import numpy as np
 
 
 class GBC:
 
-    def create(self, n_estimators=100, max_depth=3, learning_rate=0.1, subsample=1.0):
+    def create(self, n_estimators=500, max_depth=6, learning_rate=0.6, subsample=1.0):
         return GradientBoostingClassifier(n_estimators=n_estimators, max_depth=max_depth, learning_rate=learning_rate, subsample=subsample)
 
     def train(self, gbc, train_set, validation_set):
+        np.random.shuffle(train_set)
+        np.random.shuffle(validation_set)
+
         X_train, y_train = train_set[:,1:], train_set[:,0]
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
@@ -20,7 +24,7 @@ class GBC:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         #? n_estimators ! 500
-        """x = list(range(200,900,100))
+        x = list(range(2,9,1))
         accuracy = []
         for n in x:
             print(n)
@@ -31,10 +35,10 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()
 
-        #? learning_rate !
-        x = list(i/ 100 for i in range(35, 70, 5))
+        #? learning_rate !0.6
+        """x = list(i/ 100 for i in range(55, 66, 1))
         accuracy = []
         for n in x:
             print(n)
@@ -45,7 +49,7 @@ class GBC:
                 score += gbc.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()
+        plt.show()"""
 
         #? max_depth ! 6
         """x = list(range(1, 15, 1))

@@ -18,4 +18,16 @@ def get_league_season(league, year):
 
     con.close()
 
+    def smart_convert(x):
+        # First convert to float
+        num = float(x)
+        # If it has no decimal part, convert to int
+        if num.is_integer():
+            return int(num)
+        else:
+            return num  # remains as float
+
+    regular = np.vectorize(smart_convert)(regular)
+    po = np.vectorize(smart_convert)(po)
+
     return regular, po
