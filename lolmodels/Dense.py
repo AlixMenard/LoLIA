@@ -72,7 +72,7 @@ class NeuralNetwork(nn.Module):
             pred = self(self.X_val)
             test_loss = self.loss_fn(pred, self.y_val).item()
             predicted = (pred >= 0.5).float()
-            mse = ((predicted - self.y_val)**2).mean().item()
+            mse = ((pred - self.y_val)**2).mean().item()
             correct = (predicted == self.y_val).sum().item()
             accuracy = 100 * correct / len(self.y_val)
             print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, MSE : {mse:>8f}")
