@@ -14,7 +14,7 @@ device = (
 print(f"Using {device}.")
 
 class NeuralNetwork(nn.Module):
-    def __init__(self, stack = None, lr = 0.001):
+    def __init__(self, stack = None, lr = 0.00001):
         super().__init__()
         self.X_train = self.y_train = None
         self.X_val = self.y_val = None

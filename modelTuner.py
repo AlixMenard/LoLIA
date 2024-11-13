@@ -15,7 +15,7 @@ device = (
 r, p = get_league_season('worlds', 2024)
 
 def Dense_tuner():
-    LR = list(i/1000 for i in range(0,200,10))
+    LR = list(1/10**i for i in range(3,10,1))
     layers = [(128, 64), (64, 32, 16), (128, 64, 32, 16), (128, 32, 8)]
     dropouts = list(i/10 for i in range(0,5))
 
