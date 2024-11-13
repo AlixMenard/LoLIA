@@ -74,7 +74,7 @@ class NeuralNetwork(nn.Module):
             predicted = (pred >= 0.5).float()
             correct = (predicted == self.y_val).sum().item()
             accuracy = 100 * correct / len(self.y_val)
-            print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+            print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, Avg loss: {test_loss:>8f}")
         return accuracy, test_loss
 
     def format(self, train, val):
