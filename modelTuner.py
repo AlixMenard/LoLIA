@@ -40,13 +40,15 @@ def Dense_tuner():
                 NN = NeuralNetwork(stack = seq, lr = lr)
                 NN.format(r , p)
                 NN.fit()
-                acc = NN.test()
-                results.append((acc, lr, dropout, layer))
+                acc, mse = NN.test()
+                results.append((acc, mse, lr, dropout, layer))
                 count += 1
                 print(f"{count}/{tot}")
 
-    best = argmax(results, key=lambda x: x[0])
-    return best
+    best_acc = argmax(results, key=lambda x: x[0])
+    best_mse = argmax(results, key=lambda x: x[1])
+    return best_acc, best_mse
 
-b = Dense_tuner()
-print(b)
+best_acc, best_mse = Dense_tuner()
+print(best_acc)
+print(best_mse)
