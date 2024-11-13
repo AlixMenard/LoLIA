@@ -33,6 +33,7 @@ class NeuralNetwork(nn.Module):
             self.stack = stack
         self.loss_fn = nn.BCELoss()  # binary cross entropy
         self.optimizer = optim.Adam(self.parameters(), lr=lr)
+        self.to(device)
 
     def forward(self, x):
         x = self.flatten(x)
