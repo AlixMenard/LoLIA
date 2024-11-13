@@ -30,4 +30,7 @@ def get_league_season(league, year):
     regular = np.vectorize(smart_convert)(regular)
     po = np.vectorize(smart_convert)(po)
 
+    np.random.shuffle(regular)
+    np.random.shuffle(po)
+
     return regular, po
