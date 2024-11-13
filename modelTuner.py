@@ -4,6 +4,8 @@ from data_get import *
 from lolmodels.Dense import *
 from torch import nn
 
+import matplotlib.pyplot as plt
+
 device = (
     "cuda"
     if torch.cuda.is_available()
@@ -47,8 +49,15 @@ def Dense_tuner():
 
     best_acc = max(results, key=lambda x: x[0])
     best_mse = min(results, key=lambda x: x[1])
-    return best_acc, best_mse
+    return best_acc, best_mse, results
 
-best_acc, best_mse = Dense_tuner()
+best_acc, best_mse, results = Dense_tuner()
 print(best_acc)
 print(best_mse)
+X = [x[0] for x in results]
+y = [x[1] for x in results]
+plt.plot(X, y)
+plt.show()
+with open('modeltune.txt', 'w') as f:
+    for r in results:
+        f.write(f'{r}\n')
