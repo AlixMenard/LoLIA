@@ -4,6 +4,14 @@ from data_get import *
 from lolmodels.Dense import *
 from torch import nn
 
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
+
 r, p = get_league_season('worlds', 2024)
 
 LR = list(i/1000 for i in range(0,200,10))
