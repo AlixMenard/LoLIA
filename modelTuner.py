@@ -46,7 +46,7 @@ def Dense_tuner():
                 print(f"{count}/{tot}")
 
     best_acc = argmax(results, key=lambda x: x[0])
-    best_mse = argmax(results, key=lambda x: x[1])
+    best_mse = argmin(results, key=lambda x: x[1])
     return best_acc, best_mse
 
 best_acc, best_mse = Dense_tuner()
