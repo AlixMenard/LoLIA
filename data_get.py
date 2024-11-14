@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import numpy as np
 
-def get_league_season(league, year):
+def get_league_season(league, year, seq = False):
 
     sql_regular = f"SELECT * from {league} WHERE year={year} AND playoff=0"
     sql_po = f"SELECT * from {league} WHERE year={year} AND playoff=1"
@@ -10,13 +10,18 @@ def get_league_season(league, year):
     cur = con.cursor()
     cur.execute(sql_regular)
     regular = np.array(cur.fetchall())
-    regular = regular[:,5:]
+    if not seq:
+        regular = regular[:,5:]
 
     cur.execute(sql_po)
     po = np.array(cur.fetchall())
-    po = po[:,5:]
+    if not seq:
+        po = po[:,5:]
 
     con.close()
+
+    if seq:
+        return sequence(regular, po)
 
     def smart_convert(x):
         # First convert to float
@@ -34,3 +39,7 @@ def get_league_season(league, year):
     np.random.shuffle(po)
 
     return regular, po
+
+def sequence(*args):
+    for list in args:
+        games = {}
