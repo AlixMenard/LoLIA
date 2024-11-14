@@ -14,7 +14,10 @@ device = (
 print(f"Using {device}.")
 
 class NeuralNetwork(nn.Module):
-    def __init__(self, stack = None, lr = 0.00001):
+
+    # ! (81.98721673445671, 0.12498628348112106, 1e-05, 0.2, (64, 32, 16)) ; 200 epochs
+    # ? Accuracy : 81.99 %, MSE : 0.125
+    def __init__(self, stack = None, lr = 1e-05):
         super().__init__()
         self.X_train = self.y_train = None
         self.X_val = self.y_val = None
@@ -23,10 +26,13 @@ class NeuralNetwork(nn.Module):
             self.stack = nn.Sequential(
                 nn.Linear(273, 64),
                 nn.ReLU(),
-                nn.Dropout(p=0.3),
-                nn.Linear(64, 16),
+                nn.Dropout(p=0.2),
+                nn.Linear(64, 32),
                 nn.ReLU(),
-                nn.Dropout(p=0.3),
+                nn.Dropout(p=0.2),
+                nn.Linear(32, 16),
+                nn.ReLU(),
+                nn.Dropout(p=0.2),
                 nn.Linear(16, 1),
             )
         else :
