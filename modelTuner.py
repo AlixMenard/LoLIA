@@ -56,7 +56,7 @@ print(best_acc)
 print(best_mse)
 X = [x[0] for x in results]
 y = [x[1] for x in results]
-plt.plot(X, y)
+plt.plot(X, y, '.')
 plt.show()
 with open('modeltune.txt', 'w') as f:
     for r in results:

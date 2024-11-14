@@ -41,7 +41,7 @@ class NeuralNetwork(nn.Module):
         logits = torch.sigmoid(logits)
         return logits
 
-    def fit(self, X=None, y=None, n_epochs = 100, batch_size = 64, verbose = False):
+    def fit(self, X=None, y=None, n_epochs = 200, batch_size = 64, verbose = False):
         if X is None:
             if self.X_train is None:
                 return
