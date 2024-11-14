@@ -42,13 +42,15 @@
 ## Tables Structure
 ### Metadata
 
-| Column  | Data Type | Description                       |
-|---------|-----------|-----------------------------------|
-| id      | INTEGER   | Primary key, unique identifier    |
-| date    | DATE      | Date of the game                  |
-| year    | INTEGER   | Year of the game                  |
-| playoff | BOOLEAN   | Indicates if it is a playoff game |
-| time    | INTEGER   | Indicates in-game time in seconds |
+| Column  | Data Type | Description                              |
+|---------|-----------|------------------------------------------|
+| id      | INTEGER   | Primary key, unique identifier           |
+| gameId  | INTEGER   | Game ID                                  |
+| date    | DATE      | Date of the game                         |
+| year    | INTEGER   | Year of the game                         |
+| playoff | BOOLEAN   | Indicates if it is a playoff game        |
+| win     | INT       | Indicates blue team score after the game |
+| time    | INTEGER   | Indicates in-game time in seconds        |
 
 ### Team data
 Column names should be preceded by the related team (e.g. *redInhib* and *blueInhib*) 
@@ -62,6 +64,7 @@ Column names should be preceded by the related team (e.g. *redInhib* and *blueIn
 | Barons    | INTEGER   | Killed barons                              |
 | Barons_5  | INTEGER   | Killed barons in the last 5 minutes        |
 | Dragons   | INTEGER   | Killed drakes                              |
+| Dragons_5 | INTEGER   | Killed drakes in the last 5 minutes        |
 | Infernals | INTEGER   | Killed infernal drakes                     |
 | Clouds    | INTEGER   | Killed cloud drakes                        |
 | Oceans    | INTEGER   | Killed ocean drakes                        |
