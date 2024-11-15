@@ -13,6 +13,9 @@ device = (
 print(f"Using {device}.")
 
 class SimpleRNN(nn.Module):
+
+    # ! hidden_size = 4, num_layers = 1, lr = 1e-5
+    # ? Accuracy : 67.47%, MSE : 0.379
     def __init__(self, input_size = 273, hidden_size = 1, output_size = 1, num_layers = 1, lr = 1e-5):
         # input_size: Number of features in the input data.
         # hidden_size: Number of units in the RNN’s hidden layer.

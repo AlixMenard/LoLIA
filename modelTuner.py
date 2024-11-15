@@ -58,7 +58,7 @@ def RNN_tuner():
     r, p = get_league_season('worlds', 2024, seq = True)
     LR = list(1/10**i for i in range(3,7,1))
     hidden = list(2**i for i in range(0,4))
-    layers = list(i for i in range(0,10))
+    layers = list(i for i in range(1,10))
 
     results = []
     tot = len(LR) * len(layers) * len(hidden)
