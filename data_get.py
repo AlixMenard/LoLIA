@@ -1,5 +1,6 @@
 import sqlite3 as sql
 import numpy as np
+from copy import deepcopy
 
 def get_league_season(league, year, seq = False):
 
@@ -41,5 +42,25 @@ def get_league_season(league, year, seq = False):
     return regular, po
 
 def sequence(*args):
+    ret_list = []
     for list in args:
         games = {}
+        ret_list.append([])
+        for frame in list:
+            if frame[1] in games.keys():
+                games[frame[1]].append(frame)
+            else:
+                games[frame[1]] = [frame]
+        for g in games:
+            games[g].sort(key = lambda x: x[6])
+
+            temp = []
+            for i in range(len(games[g])-5):
+                temp.append( [games[g][j] for j in range(i,i+5)] )
+            temp = np.array(temp)
+            temp = temp[:,:,5:]
+            games[g] = deepcopy(temp)
+            for seq in games[g]:
+                ret_list[-1].append(seq)
+    return ret_list
+
