@@ -2,6 +2,7 @@ from numpy.ma.core import argmax
 
 from data_get import *
 from torch import nn
+import torch
 
 import matplotlib.pyplot as plt
 
@@ -55,9 +56,9 @@ def Dense_tuner():
 def RNN_tuner():
     from lolmodels.RNN import SimpleRNN
     r, p = get_league_season('worlds', 2024, seq = True)
-    LR = list(1/10**i for i in range(5,10,1))
-    hidden = list(2**i for i in range(0,10))
-    layers = list(1 for i in range(0,10))
+    LR = list(1/10**i for i in range(3,7,1))
+    hidden = list(2**i for i in range(0,4))
+    layers = list(i for i in range(0,10))
 
     results = []
     tot = len(LR) * len(layers) * len(hidden)
