@@ -3,8 +3,17 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
+print(f"Using {device}.")
+
 class SimpleRNN(nn.Module):
-    def __init__(self, input_size = 273, hidden_size = 1, output_size = 1, num_layers = 1, lr = 0.001):
+    def __init__(self, input_size = 273, hidden_size = 1, output_size = 1, num_layers = 1, lr = 1e-5):
         # input_size: Number of features in the input data.
         # hidden_size: Number of units in the RNN’s hidden layer.
         # output_size: Number of classes (for binary classification, set to 1 or 2).
@@ -62,7 +71,7 @@ class SimpleRNN(nn.Module):
                 self.optimizer.step()
 
             if (epoch + 1) % 10 == 0 and verbose:
-                print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
+                print(f'Epoch [{epoch + 1}/{n_epochs}], Loss: {loss.item():.4f}')
 
     def test(self):
         self.eval()
@@ -78,8 +87,8 @@ class SimpleRNN(nn.Module):
         return accuracy, mse
 
     def format(self, train, val):
-        X_train, y_train = train[:,1:], train[:,0]
-        X_val, y_val = val[:, 1:], val[:, 0]
+        X_train, y_train = train[:,:,1:], train[:,0,0]
+        X_val, y_val = val[:,:,1:], val[:,0,0]
 
         self.X_train = torch.tensor(X_train, dtype=torch.float32).to(device)
         self.y_train = torch.tensor(y_train, dtype=torch.float32).reshape(-1, 1).to(device)
@@ -90,4 +99,4 @@ class SimpleRNN(nn.Module):
         assert len(self.X_val) == len(self.y_val), f"Validation samples and labels have different lengths ({self.X_val.shape} and {self.y_val.shape})"
         first_parameter = next(self.parameters())
         input_shape = first_parameter.size()
-        assert len(self.X_train[0]) == input_shape[-1], f"Samples and model input have different sizes ({len(self.X_train[0])} and {input_shape[-1]})"
+        assert len(self.X_train[0][0]) == input_shape[-1], f"Samples and model input have different sizes ({len(self.X_train[0[0]])} and {input_shape[-1]})"
