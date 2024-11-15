@@ -1,8 +1,6 @@
 from numpy.ma.core import argmax
 
 from data_get import *
-from lolmodels.Dense import *
-from lolmodels.RNN import *
 from torch import nn
 
 import matplotlib.pyplot as plt
@@ -18,6 +16,7 @@ device = (
 
 
 def Dense_tuner():
+    from lolmodels.Dense import NeuralNetwork
     r, p = get_league_season('worlds', 2024)
     LR = list(1/10**i for i in range(3,10,1))
     layers = [(128, 64), (64, 32, 16), (128, 64, 32, 16), (128, 32, 8)]
@@ -54,6 +53,7 @@ def Dense_tuner():
     return best_acc, best_mse, results
 
 def RNN_tuner():
+    from lolmodels.RNN import SimpleRNN
     r, p = get_league_season('worlds', 2024, seq = True)
     LR = list(1/10**i for i in range(5,10,1))
     hidden = list(2**i for i in range(0,10))
