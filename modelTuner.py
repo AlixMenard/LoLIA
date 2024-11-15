@@ -2,6 +2,7 @@ from numpy.ma.core import argmax
 
 from data_get import *
 from lolmodels.Dense import *
+from lolmodels.RNN import *
 from torch import nn
 
 import matplotlib.pyplot as plt
@@ -14,9 +15,10 @@ device = (
     else "cpu"
 )
 
-r, p = get_league_season('worlds', 2024)
+
 
 def Dense_tuner():
+    r, p = get_league_season('worlds', 2024)
     LR = list(1/10**i for i in range(3,10,1))
     layers = [(128, 64), (64, 32, 16), (128, 64, 32, 16), (128, 32, 8)]
     dropouts = list(i/10 for i in range(0,5))
@@ -51,7 +53,32 @@ def Dense_tuner():
     best_mse = min(results, key=lambda x: x[1])
     return best_acc, best_mse, results
 
-best_acc, best_mse, results = Dense_tuner()
+def RNN_tuner():
+    r, p = get_league_season('worlds', 2024, seq = True)
+    LR = list(1/10**i for i in range(3,10,1))
+    hidden = list(2**i for i in range(0,10))
+    layers = list(1 for i in range(0,20))
+
+    results = []
+    tot = len(LR) * len(layers) * len(hidden)
+    count = 0
+
+    for lr in LR:
+        for h in hidden:
+            for layer in layers:
+                RNN = SimpleRNN(hidden_size = h, num_layers = layer, lr = lr)
+                RNN.format(r , p)
+                RNN.fit()
+                acc, mse = RNN.test()
+                results.append((acc, mse, lr, h, layer))
+                count += 1
+                print(f"{count}/{tot}")
+
+    best_acc = max(results, key=lambda x: x[0])
+    best_mse = min(results, key=lambda x: x[1])
+    return best_acc, best_mse, results
+
+best_acc, best_mse, results = RNN_tuner()
 print(best_acc)
 print(best_mse)
 X = [x[0] for x in results]
