@@ -34,6 +34,8 @@ class SimpleRNN(nn.Module):
         self.X_train = self.y_train = None
         self.X_test = self.y_test = None
 
+        self.to(device)
+
     def forward(self, x):
         # Initialize hidden state with zeros
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
