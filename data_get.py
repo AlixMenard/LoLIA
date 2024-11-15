@@ -62,6 +62,16 @@ def sequence(*args):
             games[g] = deepcopy(temp)
             for seq in games[g]:
                 ret_list[-1].append(seq)
-    ret_list = np.array(ret_list)
+    for i in range(len(ret_list)):
+        ret_list[i] = np.array(ret_list[i])
+        def smart_convert(x):
+            # First convert to float
+            num = float(x)
+            # If it has no decimal part, convert to int
+            if num.is_integer():
+                return int(num)
+            else:
+                return num  # remains as float
+        ret_list[i] = np.vectorize(smart_convert)(ret_list[i])
     return ret_list
 
