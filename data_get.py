@@ -62,5 +62,6 @@ def sequence(*args):
             games[g] = deepcopy(temp)
             for seq in games[g]:
                 ret_list[-1].append(seq)
+    ret_list = np.array(ret_list)
     return ret_list
 
