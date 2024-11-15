@@ -101,4 +101,4 @@ class SimpleRNN(nn.Module):
         assert len(self.X_val) == len(self.y_val), f"Validation samples and labels have different lengths ({self.X_val.shape} and {self.y_val.shape})"
         first_parameter = next(self.parameters())
         input_shape = first_parameter.size()
-        assert len(self.X_train[0][0]) == input_shape[-1], f"Samples and model input have different sizes ({len(self.X_train[0[0]])} and {input_shape[-1]})"
+        assert len(self.X_train[0][0]) == input_shape[-1], f"Samples and model input have different sizes ({len(self.X_train[0][0])} and {input_shape[-1]})"
