@@ -78,16 +78,24 @@ class SimpleRNN(nn.Module):
             if (epoch + 1) % 10 == 0 and verbose:
                 print(f'Epoch [{epoch + 1}/{n_epochs}], Loss: {loss.item():.4f}')
 
-    def test(self):
+    def test(self, X=None, y=None):
+        if X is None:
+            if self.X_val is None:
+                return
+            X = self.X_val
+        if y is None:
+            if self.y_val is None:
+                return
+            y = self.y_val
         self.eval()
 
         with torch.no_grad():
-            pred = self(self.X_val)
-            test_loss = self.criterion(pred, self.y_val).item()
+            pred = self(X)
+            test_loss = self.criterion(pred, y).item()
             predicted = (pred >= 0.5).float()
-            mse = ((pred - self.y_val)**2).mean().item()
-            correct = (predicted == self.y_val).sum().item()
-            accuracy = 100 * correct / len(self.y_val)
+            mse = ((pred - y)**2).mean().item()
+            correct = (predicted == y).sum().item()
+            accuracy = 100 * correct / len(y)
             print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, MSE : {mse:>8f}")
         return accuracy, mse
 
