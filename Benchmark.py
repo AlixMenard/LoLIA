@@ -12,7 +12,7 @@ models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.
 names = ["Dense", "RNN", "RandomForest", "GBC", "KNN", "SGD"]
 names = [f"{n}_{t}" for n in names for t in ["train", "val"]]
 
-results = np.zeros((len(years) * len(leagues), len(models)*2+1))
+results = np.zeros((len(years) * len(leagues), len(models)*2+1), dtype=object)
 
 for i_league, league in enumerate(leagues):
     print(league)
