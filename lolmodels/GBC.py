@@ -9,7 +9,7 @@ class GBC:
     def create(self, n_estimators=500, max_depth=6, learning_rate=0.6, subsample=1.0):
         return GradientBoostingClassifier(n_estimators=n_estimators, max_depth=max_depth, learning_rate=learning_rate, subsample=subsample)
 
-    def train(self, gbc, train_set, validation_set):
+    def train(self, gbc, train_set, validation_set, full_eval = False):
         np.random.shuffle(train_set)
         np.random.shuffle(validation_set)
 
@@ -17,6 +17,8 @@ class GBC:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         gbc.fit(X_train, y_train)
+        if full_eval:
+            return gbc.score(X_train, y_train), gbc.score(X_val, y_val)
         return gbc.score(X_val, y_val)
 
     def search_params(self, train_set, validation_set):

@@ -9,7 +9,7 @@ class KNN:
         #weights : ‘uniform’, ‘distance’
         #algo : ‘ball_tree’, ‘kd_tree’, ‘brute’
 
-    def train(self, knn, train_set, validation_set):
+    def train(self, knn, train_set, validation_set, full_eval = False):
         np.random.shuffle(train_set)
         np.random.shuffle(validation_set)
 
@@ -17,6 +17,8 @@ class KNN:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         knn.fit(X_train, y_train)
+        if full_eval:
+            return knn.score(X_train, y_train), knn.score(X_val, y_val)
         return knn.score(X_val, y_val)
 
     def search_params(self, train_set, validation_set):

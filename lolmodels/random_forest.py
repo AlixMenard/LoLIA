@@ -6,7 +6,7 @@ class RandomForest:
     def create(self, n_estimators=100, max_depth=25, random_state=0, max_features:float|str|int=0.85):
         return RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state, max_features=max_features)
 
-    def train(self, forest, train_set, validation_set):
+    def train(self, forest, train_set, validation_set, full_eval = False):
         np.random.shuffle(train_set)
         np.random.shuffle(validation_set)
 
@@ -14,6 +14,8 @@ class RandomForest:
         X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         forest.fit(X_train, y_train)
+        if full_eval:
+            return forest.score(X_train, y_train), forest.score(X_val, y_val)
         return forest.score(X_val, y_val)
 
     def search_params(self, train_set, validation_set):
