@@ -29,21 +29,21 @@ for i_league, league in enumerate(leagues):
                     m.fit()
                     training_acc, training_mse = m.test(m.X_train, m.y_train)
                     validation_acc, validation_mse = m.test(m.X_val, m.y_val)
-                    results[i_year + i_league*len(leagues), 2*i_model] = training_acc
-                    results[i_year + i_league*len(leagues), 2*i_model+1] = validation_acc
+                    results[i_year + i_league*len(years), 2*i_model] = training_acc
+                    results[i_year + i_league*len(years), 2*i_model+1] = validation_acc
                 else:
                     m.format(r_seq, p_seq)
                     m.fit()
                     training_acc, training_mse = m.test(m.X_train, m.y_train)
                     validation_acc, validation_mse = m.test(m.X_val, m.y_val)
-                    results[i_year + i_league*len(leagues), 2*i_model] = training_acc
-                    results[i_year + i_league*len(leagues), 2*i_model+1] = validation_acc
+                    results[i_year + i_league*len(years), 2*i_model] = training_acc
+                    results[i_year + i_league*len(years), 2*i_model+1] = validation_acc
                     del r_seq, p_seq
             else:
                 m = model.create()
                 training, validation = model.train(m, r, p, full_eval = True)
-                results[i_year + i_league*len(leagues), 2*i_model] = training
-                results[i_year + i_league*len(leagues), 2*i_model+1] = validation
+                results[i_year + i_league*len(years), 2*i_model] = training
+                results[i_year + i_league*len(years), 2*i_model+1] = validation
 
 
 pd_results = pd.DataFrame(results, columns=names)
