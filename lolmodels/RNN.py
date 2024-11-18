@@ -97,6 +97,7 @@ class SimpleRNN(nn.Module):
             correct = (predicted == y).sum().item()
             accuracy = 100 * correct / len(y)
             print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, MSE : {mse:>8f}")
+        print("is ok")
         return accuracy, mse
 
     def format(self, train, val):
