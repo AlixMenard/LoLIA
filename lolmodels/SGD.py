@@ -6,7 +6,7 @@ class SGD:
 
     def create(self, loss = "perceptron", penatly = "l1", alpha=0.00008):
         return SGDClassifier(loss = loss, penalty = penatly, alpha = alpha)
-        # loss : ‘hinge’, ‘log_loss’, ‘modified_huber’, ‘squared_hinge’, ‘perceptron’, ‘squared_error’,
+        # loss : ‘hinge’, ‘log_loss’, ‘modified_huber’, ‘squared_hinge’, ‘perceptron’, ‘squared_error’, ‘huber’, ‘epsilon_insensitive’, ‘squared_epsilon_insensitive’
         #        c
         # penalty : ‘l2’, ‘l1’, ‘elasticnet’
 
@@ -39,9 +39,9 @@ class SGD:
         #loss = "hinge", penatly = "l2", alpha=0.0001,
 
         #? loss ! perceptron
-        l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error", "hinge",
-             "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error"]
-        x = list(range(12))
+        l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error",
+             "huber", "epsilon_insensitive", "squared_epsilon_insensitive"]
+        x = list(range(9))
         accuracy = []
         for n in x:
             print(n)
