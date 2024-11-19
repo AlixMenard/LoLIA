@@ -39,7 +39,7 @@ class SGD:
         #loss = "hinge", penatly = "l2", alpha=0.0001,
 
         #? loss ! perceptron
-        """l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error", "hinge",
+        l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error", "hinge",
              "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error"]
         x = list(range(12))
         accuracy = []
@@ -54,7 +54,7 @@ class SGD:
                 score += knn.score(X_val, y_val)
             accuracy.append(score/10)
         plt.plot(x, accuracy)
-        plt.show()"""
+        plt.show()
 
         #? penatly ! l1
         """p = ['l1', 'l2', 'elasticnet']
