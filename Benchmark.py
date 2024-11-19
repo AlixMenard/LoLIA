@@ -10,7 +10,7 @@ leagues = ["lec", "worlds"]
 
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD()]
 names = ["Dense", "RNN", "RandomForest", "GBC", "KNN", "SGD"]
-names = [f"{n}_{t}" for n in names for t in ["train", "val"]]
+names = ["Season"] + [f"{n}_{t}" for n in names for t in ["train", "val"]]
 
 results_acc = np.zeros((len(years) * len(leagues), len(models)*2+1), dtype=object)
 results_mse = np.zeros((len(years) * len(leagues), len(models)*2+1), dtype=object)
