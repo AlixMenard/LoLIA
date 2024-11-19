@@ -32,8 +32,8 @@ for i_league, league in enumerate(leagues):
                     m.fit()
                     training_acc, training_mse = m.test(m.X_train, m.y_train)
                     validation_acc, validation_mse = m.test(m.X_val, m.y_val)
-                    results_acc[i_year + i_league*len(years), 2*i_model+1] = training_acc
-                    results_acc[i_year + i_league*len(years), 2*i_model+2] = validation_acc
+                    results_acc[i_year + i_league*len(years), 2*i_model+1] = training_acc/100
+                    results_acc[i_year + i_league*len(years), 2*i_model+2] = validation_acc/100
                     results_mse[i_year + i_league*len(years), 2*i_model+1] = training_mse
                     results_mse[i_year + i_league*len(years), 2*i_model+2] = validation_mse
 
@@ -42,8 +42,8 @@ for i_league, league in enumerate(leagues):
                     m.fit()
                     training_acc, training_mse = m.test(m.X_train, m.y_train)
                     validation_acc, validation_mse = m.test(m.X_val, m.y_val)
-                    results_acc[i_year + i_league*len(years), 2*i_model+1] = training_acc
-                    results_acc[i_year + i_league*len(years), 2*i_model+2] = validation_acc
+                    results_acc[i_year + i_league*len(years), 2*i_model+1] = training_acc/100
+                    results_acc[i_year + i_league*len(years), 2*i_model+2] = validation_acc/100
                     results_mse[i_year + i_league*len(years), 2*i_model+1] = training_mse
                     results_mse[i_year + i_league*len(years), 2*i_model+2] = validation_mse
                     del r_seq, p_seq
