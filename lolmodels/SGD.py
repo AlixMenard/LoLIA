@@ -23,6 +23,15 @@ class SGD:
             return sgd.score(X_train, y_train), sgd.score(X_val, y_val)
         return sgd.score(X_val, y_val)
 
+    def eval(self, sgd, *sets):
+        res = []
+        for set in sets:
+            X, y = set[:, 1:], set[:, 0]
+            predi = sgd.predict_proba(X)[:,1]
+            mse = ((predi - y)**2).mean().item()
+            res.append(mse)
+        return res
+
     def search_params(self, train_set, validation_set):
         X_train, y_train = train_set[:,1:], train_set[:,0]
         X_val, y_val = validation_set[:,1:], validation_set[:,0]

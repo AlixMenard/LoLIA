@@ -1,3 +1,4 @@
+from filterpy.kalman import predict
 from sklearn.ensemble import GradientBoostingClassifier
 import matplotlib.pyplot as plt
 from torch.ao.nn.quantized import Dropout
@@ -20,6 +21,15 @@ class GBC:
         if full_eval:
             return gbc.score(X_train, y_train), gbc.score(X_val, y_val)
         return gbc.score(X_val, y_val)
+
+    def eval(self, gbc:GradientBoostingClassifier, *sets):
+        res = []
+        for set in sets:
+            X, y = set[:, 1:], set[:, 0]
+            predi = gbc.predict_proba(X)[:,1]
+            mse = ((predi - y)**2).mean().item()
+            res.append(mse)
+        return res
 
     def search_params(self, train_set, validation_set):
         X_train, y_train = train_set[:,1:], train_set[:,0]
