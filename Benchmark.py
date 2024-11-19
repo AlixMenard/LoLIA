@@ -58,8 +58,9 @@ for i_league, league in enumerate(leagues):
 
 
 
-pd_results = pd.DataFrame(results_acc, columns=names)
-pd_results.to_csv("benchmark_acc.csv")
-pd_results = pd.DataFrame(results_mse, columns=names)
-pd_results.to_csv("benchmark_mse.csv")
-print(pd_results.to_markdown())
+pd_results1 = pd.DataFrame(results_acc, columns=names)
+pd_results1.to_csv("benchmark_acc.csv")
+pd_results2 = pd.DataFrame(results_mse, columns=names)
+pd_results2.to_csv("benchmark_mse.csv")
+print(pd_results1.to_markdown())
+print(pd_results2.to_markdown())
