@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class SGD:
 
-    def create(self, loss = "perceptron", penatly = "l1", alpha=0.00008):
+    def create(self, loss = "log_loss", penatly = "l1", alpha=0.00008):
         return SGDClassifier(loss = loss, penalty = penatly, alpha = alpha)
         # loss : ‘hinge’, ‘log_loss’, ‘modified_huber’, ‘squared_hinge’, ‘perceptron’, ‘squared_error’, ‘huber’, ‘epsilon_insensitive’, ‘squared_epsilon_insensitive’
         #        c
@@ -38,9 +38,9 @@ class SGD:
 
         #loss = "hinge", penatly = "l2", alpha=0.0001,
 
-        #? loss ! perceptron
-        l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron", "squared_error",
-             "huber", "epsilon_insensitive", "squared_epsilon_insensitive"]
+        #? loss ! log_loss
+        l = ["hinge", "log_loss", "modified_huber", "squared_hinge", "perceptron",
+             "squared_error", "huber", "epsilon_insensitive", "squared_epsilon_insensitive"]
         x = list(range(9))
         accuracy = []
         for n in x:
