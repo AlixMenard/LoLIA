@@ -52,7 +52,7 @@ for i_league, league in enumerate(leagues):
                 training, validation = model.train(m, r, p, full_eval = True)
                 results_acc[i_year + i_league*len(years), 2*i_model+1] = training
                 results_acc[i_year + i_league*len(years), 2*i_model+2] = validation
-                training, validation = model.evaluate(m, r, p) #MSE
+                training, validation = model.eval(m, r, p) #MSE
                 results_mse[i_year + i_league*len(years), 2*i_model+1] = training
                 results_mse[i_year + i_league*len(years), 2*i_model+2] = validation
 
