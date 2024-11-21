@@ -6,6 +6,7 @@ from lolmodels import *
 from data_get import *
 
 years = [2022, 2023, 2024]
+years = [2024]
 leagues = ["lec", "worlds"]
 
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
@@ -66,8 +67,8 @@ for i_league, league in enumerate(leagues):
 
 
 pd_results1 = pd.DataFrame(results_acc, columns=names)
-pd_results1.to_csv("benchmark_acc.csv")
+pd_results1.to_csv("benchmark_acc.csv", index=False)
 pd_results2 = pd.DataFrame(results_mse, columns=names)
-pd_results2.to_csv("benchmark_mse.csv")
+pd_results2.to_csv("benchmark_mse.csv", index=False)
 print(pd_results1.to_markdown())
 print(pd_results2.to_markdown())
