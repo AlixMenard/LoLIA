@@ -8,8 +8,8 @@ from data_get import *
 years = [2022, 2023, 2024]
 leagues = ["lec", "worlds"]
 
-models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD()]
-names = ["Dense", "RNN", "RandomForest", "GBC", "KNN", "SGD"]
+models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
+names = ["Dense", "RNN", "RandomForest", "GBC", "KNN", "SGD", "NGD"]
 names = ["Season"] + [f"{n}_{t}" for n in names for t in ["train", "val"]]
 
 results_acc = np.zeros((len(years) * len(leagues), len(models)*2+1), dtype=object)
@@ -47,6 +47,13 @@ for i_league, league in enumerate(leagues):
                     results_mse[i_year + i_league*len(years), 2*i_model+1] = training_mse
                     results_mse[i_year + i_league*len(years), 2*i_model+2] = validation_mse
                     del r_seq, p_seq
+            elif type(model) == NGD.NGD:
+                acc, mse = model.evaluate(r)
+                results_acc[i_year + i_league*len(years), 2*i_model+1] = acc
+                results_mse[i_year + i_league*len(years), 2*i_model+1] = mse
+                acc, mse = model.evaluate(p)
+                results_acc[i_year + i_league*len(years), 2*i_model+2] = acc
+                results_mse[i_year + i_league*len(years), 2*i_model+2] = mse
             else:
                 m = model.create()
                 training, validation = model.train(m, r, p, full_eval = True)
