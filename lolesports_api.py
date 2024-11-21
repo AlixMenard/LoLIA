@@ -2,6 +2,7 @@ import json, datetime
 import requests
 import requests as _requests
 from datetime import datetime as _datetime, timedelta as _timedelta
+import numpy as np
 
 def get_latest_date():
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -151,6 +152,7 @@ def downloadDetails(game_id):
 
     frames = windowData['frames']
     while windowData['frames'][-1]['gameState'] != 'finished':
+        #print(np.random.randint(100))
         params = {'startingTime': window_time.strftime(time_format)}
         windowData = _requests.get(windowApi, params=params).json()
         detailData = _requests.get(detailApi, params=params).json()
