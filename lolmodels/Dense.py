@@ -15,6 +15,8 @@ print(f"Using {device}.")
 
 class NeuralNetwork(nn.Module):
 
+    name = "NN"
+
     # ! (81.98721673445671, 0.12498628348112106, 1e-05, 0.2, (64, 32, 16)) ; 200 epochs
     # ? Accuracy : 81.99 %, MSE : 0.125
     def __init__(self, stack = None, lr = 1e-05):

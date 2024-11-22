@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 class SGD:
 
+    def __init__(self):
+        self.name = "SGD"
+
     def create(self, loss = "log_loss", penatly = "l1", alpha=0.00008):
         return SGDClassifier(loss = loss, penalty = penatly, alpha = alpha)
         # loss : ‘hinge’, ‘log_loss’, ‘modified_huber’, ‘squared_hinge’, ‘perceptron’, ‘squared_error’, ‘huber’, ‘epsilon_insensitive’, ‘squared_epsilon_insensitive’

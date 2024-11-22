@@ -14,6 +14,8 @@ print(f"Using {device}.")
 
 class SimpleRNN(nn.Module):
 
+    name = "RNN"
+
     # ! hidden_size = 4, num_layers = 1, lr = 1e-5
     # ? Accuracy : 67.47%, MSE : 0.379
     def __init__(self, input_size = 273, hidden_size = 1, output_size = 1, num_layers = 1, lr = 1e-5):

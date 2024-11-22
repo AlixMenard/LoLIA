@@ -5,6 +5,9 @@ import numpy as np
 class NGD:
 
     def __init__(self):
+        self.name = "NGD"
+
+    def __init__(self):
         self.X_train = self.y_train = None
         self.X_test = self.y_test = None
 

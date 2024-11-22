@@ -7,6 +7,9 @@ import numpy as np
 
 class GBC:
 
+    def __init__(self):
+        self.name = "GBC"
+
     def create(self, n_estimators=500, max_depth=6, learning_rate=0.6, subsample=1.0):
         return GradientBoostingClassifier(n_estimators=n_estimators, max_depth=max_depth, learning_rate=learning_rate, subsample=subsample)
 

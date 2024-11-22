@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 class KNN:
 
+    def __init__(self):
+        self.name = "KNN"
+
     def create(self, n_neighbours=40, weights='uniform', algorithm='ball_tree', metric='minkowski', p=2):
         return NN(n_neighbors=n_neighbours, weights=weights, algorithm=algorithm, metric=metric, p=p)
         #weights : ‘uniform’, ‘distance’

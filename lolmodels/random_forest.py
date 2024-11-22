@@ -4,6 +4,9 @@ import numpy as np
 
 class RandomForest:
 
+    def __init__(self):
+        self.name = "RandomForest"
+
     def create(self, n_estimators=100, max_depth=25, random_state=0, max_features:float|str|int=0.85):
         return RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state, max_features=max_features)
 
