@@ -71,4 +71,28 @@ def global_results():
     plt.show()
 
 def timelessness(model_type):
-    pass
+    df = pd.read_csv(rf"data/benchmarks/timelessness_{model_type.name}.csv")
+
+    # Set "Years" column as the index
+    df.set_index("Years", inplace=True)
+
+    # Plot the heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(
+        df,
+        annot=True,  # Show accuracy values in the cells
+        fmt=".2f",  # Format to 2 decimal places
+        cmap="YlGnBu",  # Colormap
+        cbar_kws={'label': 'Accuracy'},  # Label for the color bar
+        linewidths=0.5,  # Line width between cells
+        square=True  # Square cells
+    )
+
+    # Add titles and labels
+    plt.title("Model Accuracy by Training and Testing Years", fontsize=16)
+    plt.xlabel("Testing Year", fontsize=12)
+    plt.ylabel("Training Year", fontsize=12)
+
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
