@@ -6,6 +6,7 @@ from lolmodels import *
 from data_get import *
 
 leagues = ["lec", "worlds"]
+years = [2022, 2023, 2024]
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
 
 def global_results():
@@ -73,8 +74,8 @@ def global_results():
     pd_results2.to_csv("benchmark_mse.csv", index=False)
 
 def timelessness(model_type):
-    years_train = [2022, 2023, 2024]
-    years_eval = [2022, 2023, 2024]
+    years_train = years[:]
+    years_eval = years[:]
 
     results = np.zeros((len(leagues), len(years_train), len(years_eval)), dtype=object)
 
@@ -115,3 +116,51 @@ def timelessness(model_type):
     df = pd.DataFrame(results2, columns=["Years"] + years_eval)
     df.to_csv(fr"data/benchmarks/timelessness_{model_type.name}.csv", index=False)
 
+def cross_region_compatibility(model_type):
+    leagues_train = leagues[:]
+    leagues_eval = leagues[:]
+
+    results = np.zeros((len(years), len(leagues_train), len(leagues_eval)), dtype=object)
+
+    for i_y, y in enumerate(years):
+        print(y, flush=True)
+        for i_lt, lt in enumerate(leagues_train):
+            print(f"\t{lt}", end = "", flush=True)
+            for i_le, le in enumerate(leagues_eval):
+                print(".", end = "", flush=True)
+                if type(model_type) == type:
+                    model = model_type()
+                    if type(model) == RNN.SimpleRNN:
+                        r, _ = get_league_season(lt, y, seq = True)
+                        _, p = get_league_season(le, y, seq = True)
+                    else:
+                        r, _ = get_league_season(lt, y)
+                        _, p = get_league_season(le, y)
+                    model.format(r, p)
+                    model.fit()
+
+                    validation_acc, _ = model.test(model.X_val, model.y_val)
+                    results[i_y, i_lt, i_le] = validation_acc/100
+                else:
+                    model = model_type.create()
+                    r, _ = get_league_season(lt, y)
+                    _, p = get_league_season(le, y)
+
+                    _, validation_acc = model_type.train(model, r, p, full_eval=True)
+                    results[i_y, i_lt, i_le] = validation_acc
+            print("", flush=True)
+
+
+    results = np.mean(results, axis=0)
+    results2 = np.zeros((len(leagues_train), len(leagues_eval)+1), dtype=object)
+    for i in range(len(leagues_train)):
+        results2[i, 0] = leagues_train[i]
+        results2[i, 1:] = results[i, :]
+    df = pd.DataFrame(results2, columns=["Leagues"] + leagues_eval)
+    df.to_csv(fr"data/benchmarks/CRC_{model_type.name}.csv", index=False)
+
+if __name__ == "__main__":
+    global_results()
+    for m_t in models:
+        timelessness(m_t)
+        cross_region_compatibility(m_t)
