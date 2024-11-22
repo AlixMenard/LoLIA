@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
 import numpy as np
+import seaborn as sns
 
 def global_results():
     # Example DataFrames (same as before)
@@ -68,3 +69,6 @@ def global_results():
     plt.xlim(0.65, 0.8)  # Adjust based on your data
     plt.ylim(0.15, 0.35)  # Adjust based on your data
     plt.show()
+
+def timelessness(model_type):
+    pass
