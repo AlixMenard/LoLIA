@@ -89,14 +89,14 @@ def timelessness(model_type):
                     model = model_type()
                     if type(model) == RNN.SimpleRNN:
                         r1, r2 = get_league_season(l, yt, seq = True)
-                        r = r1+r2
+                        r = np.vstack((r1, r2))
                         p1, p2 = get_league_season(l, ye, seq = True)
-                        p = p1+p2
+                        p = np.vstack((p1, p2))
                     else:
                         r1, r2 = get_league_season(l, yt)
-                        r = r1+r2
+                        r = np.vstack((r1, r2))
                         p1, p2 = get_league_season(l, ye)
-                        p = p1+p2
+                        p = np.vstack((p1, p2))
                     model.format(r, p)
                     model.fit()
 
@@ -105,9 +105,9 @@ def timelessness(model_type):
                 else:
                     model = model_type.create()
                     r1, r2 = get_league_season(l, yt)
-                    r = r1+r2
+                    r = np.vstack((r1, r2))
                     p1, p2 = get_league_season(l, ye)
-                    p = p1+p2
+                    p = np.vstack((p1, p2))
 
                     _, validation_acc = model_type.train(model, r, p, full_eval=True)
                     results[i_l, i_yt, i_ye] = validation_acc
@@ -138,14 +138,14 @@ def cross_region_compatibility(model_type):
                     model = model_type()
                     if type(model) == RNN.SimpleRNN:
                         r1, r2 = get_league_season(lt, y, seq = True)
-                        r = r1+r2
+                        r = np.vstack((r1, r2))
                         p1, p2 = get_league_season(le, y, seq = True)
-                        p = p1 + p2
+                        p = np.vstack((p1, p2))
                     else:
                         r1, r2 = get_league_season(lt, y)
-                        r = r1+r2
+                        r = np.vstack((r1, r2))
                         p1, p2 = get_league_season(le, y)
-                        p = p1 + p2
+                        p = np.vstack((p1, p2))
                     model.format(r, p)
                     model.fit()
 
@@ -154,9 +154,9 @@ def cross_region_compatibility(model_type):
                 else:
                     model = model_type.create()
                     r1, r2 = get_league_season(lt, y)
-                    r = r1+r2
+                    r = np.vstack((r1, r2))
                     p1, p2 = get_league_season(le, y)
-                    p = p1 + p2
+                    p = np.vstack((p1, p2))
 
                     _, validation_acc = model_type.train(model, r, p, full_eval=True)
                     results[i_y, i_lt, i_le] = validation_acc
