@@ -113,5 +113,5 @@ def timelessness(model_type):
         results2[i, 0] = years_train[i]
         results2[i, 1:] = results[i, :]
     df = pd.DataFrame(results2, columns=["Years"] + years_eval)
-    df.to_csv(f"timelessness_{model_type.name}.csv", index=False)
+    df.to_csv(fr"data/benchmarks/timelessness_{model_type.name}.csv", index=False)
 
