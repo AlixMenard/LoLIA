@@ -79,11 +79,11 @@ def timelessness(model_type):
     results = np.zeros((len(leagues), len(years_train), len(years_eval)), dtype=object)
 
     for i_l, l in enumerate(leagues):
-        print(l)
+        print(l, flush=True)
         for i_yt, yt in enumerate(years_train):
-            print(f"\t{yt}", end = "")
+            print(f"\t{yt}", end = "", flush=True)
             for i_ye, ye in enumerate(years_eval):
-                print(".", end = "")
+                print(".", end = "", flush=True)
                 if type(model_type) == type:
                     model = model_type()
                     if type(model) == RNN.SimpleRNN:
