@@ -79,9 +79,11 @@ def timelessness(model_type):
     results = np.zeros((len(leagues), len(years_train), len(years_eval)), dtype=object)
 
     for i_l, l in enumerate(leagues):
+        print(l)
         for i_yt, yt in enumerate(years_train):
+            print(f"\t{yt}", end = "")
             for i_ye, ye in enumerate(years_eval):
-
+                print(".", end = "")
                 if type(model_type) == type:
                     model = model_type()
                     if type(model) == RNN.SimpleRNN:
@@ -105,10 +107,10 @@ def timelessness(model_type):
 
 
     results = np.mean(results, axis=0)
-    results2 = np.zeros((len(years_train)+1, len(years_eval)), dtype=object)
+    results2 = np.zeros((len(years_train), len(years_eval)+1), dtype=object)
     for i in range(len(years_train)):
         results2[i, 0] = years_train[i]
         results2[i, 1:] = results[i, :]
     df = pd.DataFrame(results, columns=years_eval)
-    df.to_csv("timelessness.csv", index=False)
+    df.to_csv(f"timelessness_{model_type.name}.csv", index=False)
 
