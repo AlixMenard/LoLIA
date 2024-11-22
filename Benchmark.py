@@ -112,6 +112,6 @@ def timelessness(model_type):
     for i in range(len(years_train)):
         results2[i, 0] = years_train[i]
         results2[i, 1:] = results[i, :]
-    df = pd.DataFrame(results, columns=["Years"] + years_eval)
+    df = pd.DataFrame(results2, columns=["Years"] + years_eval)
     df.to_csv(f"timelessness_{model_type.name}.csv", index=False)
 
