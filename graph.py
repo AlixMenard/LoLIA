@@ -71,7 +71,7 @@ def global_results():
     plt.show()
 
 def timelessness(model_type):
-    df = pd.read_csv(rf"data/benchmarks/timelessness_{model_type.name}.csv")
+    df = pd.read_csv(rf"data/benchmarks/timelessness_{model_type}.csv")
 
     # Set "Years" column as the index
     df.set_index("Years", inplace=True)
