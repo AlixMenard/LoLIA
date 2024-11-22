@@ -403,7 +403,6 @@ def load_match(id):
 def save_match(id, is_PO, league):
     data = load_match(id)
     if data is None:
-        print(id)
         connection = sqlite3.connect("matches.db")
         cursor = connection.cursor()
         sql = f"INSERT INTO game_ids (id) VALUES ({id})"
