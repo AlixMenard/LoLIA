@@ -5,11 +5,9 @@ import numpy as np
 class NGD:
 
     def __init__(self):
-        self.name = "NGD"
-
-    def __init__(self):
         self.X_train = self.y_train = None
         self.X_test = self.y_test = None
+        self.name = "NGD"
 
     def train(self, *args):
         raise Exception("Why would you want to train that ?")
