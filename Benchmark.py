@@ -104,6 +104,7 @@ def timelessness(model_type):
 
                     _, validation_acc = model_type.train(model, r, p, full_eval=True)
                     results[i_l, i_yt, i_ye] = validation_acc
+            print("", flush=True)
 
 
     results = np.mean(results, axis=0)
