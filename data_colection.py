@@ -403,6 +403,7 @@ def load_match(id):
 def save_match(id, is_PO, league):
     data = load_match(id)
     if data is None:
+        print(id)
         connection = sqlite3.connect("matches.db")
         cursor = connection.cursor()
         sql = f"INSERT INTO game_ids (id) VALUES ({id})"
@@ -537,6 +538,7 @@ if __name__ == "__main__":
             print("IDs retrieved... ", end = "", flush=True)
             skipped = done = 0
             nb_ids = len(m)
+            m2 = list(set(m))
             for i in m:
                 if not int(i[0]) in done_ids:
                     save_match(i[0], i[1], l)
@@ -544,6 +546,7 @@ if __name__ == "__main__":
                 else:
                     done += 1
                     skipped += 1
+                done_ids.append(int(i[0]))
                 print(end="\r")
                 print(f"\t{y}... IDs retrieved... {done}/{nb_ids}, skipped {skipped}/{done}.", end = "", flush=True)
             print("Done", flush=True)

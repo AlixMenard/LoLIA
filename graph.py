@@ -96,3 +96,30 @@ def timelessness(model_type):
     # Show the plot
     plt.tight_layout()
     plt.show()
+
+def cross_region_compatibility(model_type):
+    df = pd.read_csv(rf"data/benchmarks/CRC_{model_type}.csv")
+
+    # Set "Years" column as the index
+    df.set_index("Leagues", inplace=True)
+
+    # Plot the heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(
+        df,
+        annot=True,  # Show accuracy values in the cells
+        fmt=".2f",  # Format to 2 decimal places
+        cmap="YlGnBu",  # Colormap
+        cbar_kws={'label': 'Accuracy'},  # Label for the color bar
+        linewidths=0.5,  # Line width between cells
+        square=True  # Square cells
+    )
+
+    # Add titles and labels
+    plt.title("Model Accuracy by Training and Testing League", fontsize=16)
+    plt.xlabel("Testing League", fontsize=12)
+    plt.ylabel("Training League", fontsize=12)
+
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
