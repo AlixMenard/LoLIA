@@ -85,7 +85,9 @@ def timelessness(model_type):
         cmap="YlGnBu",  # Colormap
         cbar_kws={'label': 'Accuracy'},  # Label for the color bar
         linewidths=0.5,  # Line width between cells
-        square=True  # Square cells
+        square=True,  # Square cells
+        vmin=0,
+        vmax=1
     )
 
     # Add titles and labels
@@ -112,7 +114,9 @@ def cross_region_compatibility(model_type):
         cmap="YlGnBu",  # Colormap
         cbar_kws={'label': 'Accuracy'},  # Label for the color bar
         linewidths=0.5,  # Line width between cells
-        square=True  # Square cells
+        square=True,  # Square cells
+        vmin=0,
+        vmax=1
     )
 
     # Add titles and labels
