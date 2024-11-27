@@ -79,7 +79,8 @@ def get_year(year, seq = False):
     leagues = ['lec', 'lcs', 'lck'] # , 'lpl'
 
     rw, pw = get_league_season("worlds", year, seq)
-    p = np.vstack((rw, pw))
+    #!rm, pm = get_league_season("msi", year, seq)
+    p = np.vstack((rw, pw)) #!, rm, pm
 
     r = np.empty((0, 274))
     for l in leagues:
