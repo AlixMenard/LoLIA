@@ -75,3 +75,15 @@ def sequence(*args):
         ret_list[i] = np.vectorize(smart_convert)(ret_list[i])
     return ret_list
 
+def get_year(year, seq = False):
+    leagues = ['lec', 'lcs', 'lck'] # , 'lpl'
+
+    rw, pw = get_league_season("worlds", year, seq)
+    p = np.vstack((rw, pw))
+
+    r = np.empty((0, 274))
+    for l in leagues:
+        rl, pl = get_league_season(l, year, seq)
+        r = np.vstack((r, rl, pl))
+
+    return r, p
