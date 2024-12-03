@@ -14,11 +14,11 @@ class KNN:
 
     def train(self, knn, train_set, validation_set, full_eval = False):
         np.random.shuffle(train_set)
-        if full_eval and validation_set is not None:
+        if validation_set is not None:
             np.random.shuffle(validation_set)
 
         X_train, y_train = train_set[:,1:], train_set[:,0]
-        if full_eval and validation_set is not None:
+        if validation_set is not None:
             X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         knn.fit(X_train, y_train)
