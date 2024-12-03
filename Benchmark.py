@@ -179,20 +179,19 @@ def stability(model_type):
 
     if type(model_type) == type:
         model = model_type()
-        model.format(training, None)
+        model.format(training, training)
         model.fit()
     else:
         model = model_type.create()
         model_type.train(model, training, None)
 
     for m in matches:
-        m = format(m)
+        m_x, m_y = format(m)
         if type(model_type) == type:
-            res = [float(i[0]) for i in model(m)]
+            res = [float(i[0]) for i in model(m_x)]
             results.append(res)
         else:
-            mx, _ = m
-            res = model.predict_proba(mx)[:,1]
+            res = model.predict_proba(m_x)[:,1]
             results.append(res)
 
     def compute_fft(probabilities):
@@ -259,7 +258,7 @@ def stability(model_type):
     data = list(zip(deltas, averages, results))
     with open(fr"data/benchmarks/{model_type.name}_stability.csv", "w") as f:
         for line in data:
-            f.write(f"{d[0]}, {d[1]}, {d[2]}\n")
+            f.write(f"{line[0]}, {line[1]}, {line[2]}\n")
 
 
 if __name__ == "__main__":
