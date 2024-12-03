@@ -1,4 +1,6 @@
 import sqlite3 as sql
+from random import random
+
 import numpy as np
 from copy import deepcopy
 
@@ -88,3 +90,36 @@ def get_year(year, seq = False):
         r = np.vstack((r, rl, pl))
 
     return r, p
+
+
+def get_random_matches(n=1):
+    con = sql.connect("matches.db")
+    cur = con.cursor()
+    sql_query = """SELECT name FROM sqlite_master  WHERE type='table';"""
+    cur.execute(sql_query)
+    tables = [t[0] for t in cur.fetchall() if t[0] != "game_ids"]
+
+    matches = []
+    for _ in range(n):
+        table = np.random.choice(tables)
+        cur.execute(f"SELECT gameId from {table}")
+        games_ids = [id[0] for id in cur.fetchall()]
+        id = np.random.choice(games_ids)
+        cur.execute(f"SELECT * from {table} WHERE gameId={id} ORDER BY time")
+        game = cur.fetchall()
+        matches.append(game)
+    return matches
+
+def get_samples(size=2e4):
+    con = sql.connect("matches.db")
+    cur = con.cursor()
+    n = size//3
+
+    leagues = ["lec", "lcs", "lck"] #? LPL ?
+
+    samples = []
+    for l in leagues:
+        cur.execute(f"SELECT * from {l} ORDER BY RANDOM() LIMIT {n}")
+        s = cur.fetchall()
+        samples += s
+    return samples
