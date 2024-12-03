@@ -4,6 +4,16 @@ from random import random
 import numpy as np
 from copy import deepcopy
 
+
+def smart_convert(x):
+    # First convert to float
+    num = float(x)
+    # If it has no decimal part, convert to int
+    if num.is_integer():
+        return int(num)
+    else:
+        return num  # remains as float
+
 def get_league_season(league, year, seq = False):
 
     sql_regular = f"SELECT * from {league} WHERE year={year} AND playoff=0"
@@ -26,14 +36,6 @@ def get_league_season(league, year, seq = False):
     if seq:
         return sequence(regular, po)
 
-    def smart_convert(x):
-        # First convert to float
-        num = float(x)
-        # If it has no decimal part, convert to int
-        if num.is_integer():
-            return int(num)
-        else:
-            return num  # remains as float
 
     regular = np.vectorize(smart_convert)(regular)
     po = np.vectorize(smart_convert)(po)
@@ -108,6 +110,8 @@ def get_random_matches(n=1):
         cur.execute(f"SELECT * from {table} WHERE gameId={id} ORDER BY time")
         game = cur.fetchall()
         matches.append(game)
+    matches = np.array(matches)[:,:,5:]
+    matches = np.vectorize(smart_convert)(matches)
     return matches
 
 def get_samples(size=2e4):
@@ -122,4 +126,6 @@ def get_samples(size=2e4):
         cur.execute(f"SELECT * from {l} ORDER BY RANDOM() LIMIT {n}")
         s = cur.fetchall()
         samples += s
+    samples = np.array(samples)[:,5:]
+    samples = np.vectorize(smart_convert)(samples)
     return samples
