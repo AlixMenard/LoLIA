@@ -3,14 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-device = (
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps"
-    if torch.backends.mps.is_available()
-    else "cpu"
-)
-print(f"Using {device}.")
+from . import device
 
 class SimpleRNN(nn.Module):
 

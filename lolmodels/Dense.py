@@ -4,14 +4,7 @@ from torch import nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-device = (
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps"
-    if torch.backends.mps.is_available()
-    else "cpu"
-)
-print(f"Using {device}.")
+from . import device
 
 class NeuralNetwork(nn.Module):
 
