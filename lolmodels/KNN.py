@@ -14,15 +14,18 @@ class KNN:
 
     def train(self, knn, train_set, validation_set, full_eval = False):
         np.random.shuffle(train_set)
-        np.random.shuffle(validation_set)
+        if full_eval and validation_set is not None:
+            np.random.shuffle(validation_set)
 
         X_train, y_train = train_set[:,1:], train_set[:,0]
-        X_val, y_val = validation_set[:,1:], validation_set[:,0]
+        if full_eval and validation_set is not None:
+            X_val, y_val = validation_set[:,1:], validation_set[:,0]
 
         knn.fit(X_train, y_train)
-        if full_eval:
+        if full_eval and validation_set is not None:
             return knn.score(X_train, y_train), knn.score(X_val, y_val)
-        return knn.score(X_val, y_val)
+        if validation_set is not None:
+            return knn.score(X_val, y_val)
 
     def eval(self, knn, *sets):
         res = []
