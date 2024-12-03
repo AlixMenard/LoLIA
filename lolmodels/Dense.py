@@ -4,7 +4,7 @@ from torch import nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from . import device
+from . import device, format
 
 class NeuralNetwork(nn.Module):
 

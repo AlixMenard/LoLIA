@@ -8,11 +8,20 @@ device = (
     if torch.backends.mps.is_available()
     else "cpu"
 )
+print(f"Using device: {device}")
 
-def format(*args):
-    ret = []
-    for batch in args:
-        X, y = train[:, 1:], train[:, 0]
+def format(batch):
+    if len(batch.shape) == 2:
+        X, y = batch[:, 1:], batch[:, 0]
 
         X = torch.tensor(X, dtype=torch.float32).to(device)
         y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1).to(device)
+
+        return X, y
+    else:
+        X, y = batch[:,:,1:], batch[:,0,0]
+
+        X = torch.tensor(X, dtype=torch.float32).to(device)
+        y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1).to(device)
+
+        return X, y

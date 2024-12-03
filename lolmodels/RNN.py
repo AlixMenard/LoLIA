@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-from . import device
+from . import device, format
 
 class SimpleRNN(nn.Module):
 
