@@ -108,10 +108,9 @@ def get_random_matches(n=1):
         games_ids = [id[0] for id in cur.fetchall()]
         id = np.random.choice(games_ids)
         cur.execute(f"SELECT * from {table} WHERE gameId={id} ORDER BY time")
-        game = cur.fetchall()
+        game = np.array(cur.fetchall())
         matches.append(game)
-    matches = np.array(matches)[:,:,5:]
-    matches = np.vectorize(smart_convert)(matches)
+    matches = [np.vectorize(smart_convert)(game[:,5:]) for game in matches]
     return matches
 
 def get_samples(size=2e4):
