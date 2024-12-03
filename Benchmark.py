@@ -6,7 +6,7 @@ from mpmath.libmp import trailing
 from lolmodels import *
 from data_get import *
 
-leagues = ["lec", "worlds"]
+leagues = ["lcs", "lec", "worlds"]
 years = [2022, 2023, 2024]
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
 
@@ -256,7 +256,7 @@ def stability(model_type):
     averages = np.array(averages)
     results = np.array(results)
     data = list(zip(deltas, averages, results))
-    with open(fr"data/benchmarks/{model_type.name}_stability.csv", "w") as f:
+    with open(fr"data/benchmarks/stability_{model_type.name}.csv", "w") as f:
         for line in data:
             f.write(f"{line[0]}, {line[1]}, {line[2]}\n")
 
