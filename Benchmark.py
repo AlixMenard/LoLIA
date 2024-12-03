@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from mpmath.libmp import trailing
 
 from lolmodels import *
 from data_get import *
@@ -171,8 +172,102 @@ def cross_region_compatibility(model_type):
     df = pd.DataFrame(results2, columns=["Leagues"] + leagues_eval)
     df.to_csv(fr"data/benchmarks/CRC_{model_type.name}.csv", index=False)
 
+def stability(model_type):
+    matches = get_random_matches(200) #! 100
+    training = get_samples() #! default
+    results = []
+
+    if type(model_type) == type:
+        model = model_type()
+        model.format(training, None)
+        model.fit()
+    else:
+        model = model_type.create()
+        model_type.train(model, training, None)
+
+    for m in matches:
+        m = format(m)
+        if type(model_type) == type:
+            res = [float(i[0]) for i in model(m)]
+            results.append(res)
+        else:
+            mx, _ = m
+            res = model.predict_proba(mx)[:,1]
+            results.append(res)
+
+    def compute_fft(probabilities):
+        N = len(probabilities)
+        fft_vals = np.fft.fft(probabilities)
+        freqs = np.fft.fftfreq(N, d=10)  # d=10 for 10-second intervals
+        return fft_vals, freqs, N
+
+    averages = [np.mean(res) for res in results]
+    deltas = [np.max(res)-np.min(res) for res in results]
+    plot = [res[:] for res in results]
+
+    results = [compute_fft(res) for res in results]
+
+    def plot_magnitude_spectrum(freqs, fft_vals, game_l, title="Magnitude Spectrum"):
+
+        N = len(freqs)  # Total number of frequency components
+        half_N = N // 2
+
+        # Use only the positive frequencies
+        positive_freqs = freqs[:half_N]
+        positive_magnitude = np.abs(fft_vals[:half_N])
+        #positive_magnitude[0] /= game_l
+        normalized_magnitudes = positive_magnitude #/ np.max(positive_magnitude)
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(positive_freqs, normalized_magnitudes, width=0.001)
+        plt.title("Frequency Spectrum (Positive Frequencies)")
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("Magnitude")
+        plt.show()
+
+    for i, m in enumerate(results):
+        magnitudes, freqs, N = m
+        N = len(freqs)  # Total number of frequency components
+        half_N = N // 2
+
+        positive_freqs = freqs[:half_N]
+        positive_magnitude = np.abs(magnitudes[:half_N])
+        positive_magnitude[0] /= N
+        normalized_magnitudes = positive_magnitude / np.max(positive_magnitude)
+
+        high_freq = np.where(positive_freqs>0.01)
+        #print(high_freq, positive_freqs[high_freq])
+
+        energy_ratio = np.sum(normalized_magnitudes[high_freq]**2) / np.sum(normalized_magnitudes**2)
+        results[i] = energy_ratio
+
+    """plt.plot(averages, results, ".")
+    plt.show()
+    plt.plot(deltas, results, ".")
+    plt.show()
+
+    for i, energy in enumerate(results):
+        if energy > 0.8:
+            plt.plot(plot[i])
+            fft_vals, freqs, N = compute_fft(plot[i])
+            plot_magnitude_spectrum(freqs, fft_vals, N)"""
+
+
+    deltas = np.array(deltas)
+    averages = np.array(averages)
+    results = np.array(results)
+    data = list(zip(deltas, averages, results))
+    with open(fr"data/benchmarks/{model_type.name}_stability.csv", "w") as f:
+        for line in data:
+            f.write(f"{d[0]}, {d[1]}, {d[2]}\n")
+
+
 if __name__ == "__main__":
     global_results()
+    models = models[:-1]
     for m_t in models:
         timelessness(m_t)
         cross_region_compatibility(m_t)
+    models.pop(1)
+    for m_t in models:
+        stability(m_t)
