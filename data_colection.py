@@ -399,7 +399,6 @@ def load_match(id):
 
     return data
 
-
 def save_match(id, is_PO, league):
     data = load_match(id)
     if data is None:
@@ -520,10 +519,31 @@ def found():
     connection.close()
     return results
 
+def curate():
+    connection = sqlite3.connect("matches.db")
+    cursor = connection.cursor()
+    sql = f"delete from game_ids"
+    cursor.execute(sql)
+
+    leagues = ["worlds", "lec", "lcs", "lck"]
+    for l in leagues:
+        sql = f"select gameId from {l} group by gameId"
+        cursor.execute(sql)
+        ids = cursor.fetchall()
+        ids = [i[0] for i in ids]
+        for id in ids:
+            sql = f"insert into game_ids (id) values ({id})"
+            cursor.execute(sql)
+    connection.commit()
+    connection.close()
+
+
 if __name__ == "__main__":
-    leagues = ["worlds", "lec", "lcs", "lck", "lpl", "msi"]
+    leagues = ["lck", "lpl", "msi"]
     years = [2022, 2023, 2024]
     years.reverse()
+    #print("Curating...", end="")
+    #curate()
     done_ids = found()
     done_ids = [i[0] for i in done_ids]
     print("Got saved.")
