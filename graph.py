@@ -152,31 +152,18 @@ def stability(model_type):
     plt.tight_layout()
     plt.show()
 
-
-
 def plot_smoothing_methods(data, time_interval=10):
-    """
-    Plot smoothing techniques on a scatter plot using the provided data array.
-
-    Parameters:
-    - data (array-like): Input data array (e.g., measurements taken at intervals).
-    - time_interval (float): Time interval between measurements, used for x-axis.
-    """
     # Generate x values based on the time interval
     x = np.arange(0, len(data) * time_interval, time_interval)
-
-    # Moving Average Smoothing
-    window_size = 5
-    moving_avg = np.convolve(data, np.ones(window_size) / window_size, mode='same')
 
     # Gaussian Smoothing
     sigma = 2
     gaussian_smooth = gaussian_filter1d(data, sigma=sigma)
+    # Gaussian Smoothing
+    sigma = 1
+    gaussian_smooth1 = gaussian_filter1d(data, sigma=sigma)
+    gaussian_smooth12 = gaussian_filter1d(gaussian_smooth1, sigma=sigma)
 
-    # Cubic Spline Interpolation
-    cubic_spline = CubicSpline(x, data)
-    x_dense = np.linspace(x.min(), x.max(), 500)
-    y_spline = cubic_spline(x_dense)
 
     # Plotting
     plt.figure(figsize=(12, 6))
@@ -184,20 +171,17 @@ def plot_smoothing_methods(data, time_interval=10):
     # Original scatter plot
     plt.scatter(x, data, color='gray', alpha=0.5, label='Original Data (Scatter)')
 
-    # Moving Average
-    plt.plot(x, moving_avg, color='blue', label='Moving Average')
-
     # Gaussian Smoothing
-    plt.plot(x, gaussian_smooth, color='green', label='Gaussian Smoothing')
-
-    # Cubic Spline
-    plt.plot(x_dense, y_spline, color='red', label='Cubic Spline Interpolation')
+    plt.plot(x, gaussian_smooth, color='green', label='Gaussian Smoothing 2')
+    plt.plot(x, gaussian_smooth12, color='red', label='Gaussian Smoothing 1 *2')
 
     # Labels and legend
-    plt.title('Smoothing Techniques on Scatter Plot')
+    plt.title('Game outcome chances vs time')
     plt.xlabel('Time (s)')
-    plt.ylabel('Data Value')
+    plt.ylabel('Winning probability')
     plt.legend()
     plt.grid(True)
     plt.show()
+
+    return gaussian_smooth
 
