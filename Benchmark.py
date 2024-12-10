@@ -8,7 +8,7 @@ from data_get import *
 
 from colorama import Fore, Back, Style
 
-leagues = ["lcs", "lec", "worlds"]
+leagues = ["lec", "lcs", "lck", "worlds", "msi"]
 years = [2022, 2023, 2024]
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
 
