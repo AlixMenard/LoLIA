@@ -7,12 +7,17 @@ from lolmodels import *
 from data_get import *
 
 from colorama import Fore, Back, Style
+import os
 
 leagues = ["lec", "lcs", "lck", "worlds", "msi"]
 years = [2022, 2023, 2024]
 models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.GBC(), KNN.KNN(), SGD.SGD(), NGD.NGD()]
 
 def global_results():
+
+    if os.path.exists("data/benchmarks/benchmark_acc.csv") and os.path.exists("data/benchmarks/benchmark_loss.csv"):
+        return
+
     years = [2022, 2023, 2024]
 
     names = ["Dense", "RNN", "RandomForest", "GBC", "KNN", "SGD", "NGD"]
@@ -72,11 +77,15 @@ def global_results():
 
 
     pd_results1 = pd.DataFrame(results_acc, columns=names)
-    pd_results1.to_csv("benchmark_acc.csv", index=False)
+    pd_results1.to_csv(r"data/benchmarks/benchmark_acc.csv", index=False)
     pd_results2 = pd.DataFrame(results_mse, columns=names)
-    pd_results2.to_csv("benchmark_mse.csv", index=False)
+    pd_results2.to_csv(r"data/benchmarks/benchmark_mse.csv", index=False)
 
 def timelessness(model_type):
+
+    if os.path.exists(fr"data/benchmarks/timelessness_{model_type.name}.csv"):
+        return
+
     years_train = years[:]
     years_eval = years[:]
 
@@ -126,6 +135,10 @@ def timelessness(model_type):
     df.to_csv(fr"data/benchmarks/timelessness_{model_type.name}.csv", index=False)
 
 def cross_region_compatibility(model_type):
+
+    if os.path.exists(fr"data/benchmarks/CRC_{model_type.name}.csv"):
+        return
+
     leagues_train = leagues[:]
     leagues_eval = leagues[:]
 
@@ -175,6 +188,10 @@ def cross_region_compatibility(model_type):
     df.to_csv(fr"data/benchmarks/CRC_{model_type.name}.csv", index=False)
 
 def stability(model_type):
+
+    if os.path.exists(fr"data/benchmarks/stability_{model_type.name}.csv"):
+        return
+
     matches = get_random_matches(200) #! 100
     training = get_samples() #! default
     results = []
