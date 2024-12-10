@@ -35,7 +35,7 @@ def global_results():
     color_map = {model: color for model, color in zip(stats["Model"], colors)}
 
     for _, row in stats.iterrows():
-        # Ellipse 1: Range (min to max)
+        """# Ellipse 1: Range (min to max)
         x_center_range = (row["AccMin"] + row["AccMax"]) / 2
         y_center_range = (row["MSEMin"] + row["MSEMax"]) / 2
         width_range = row["AccMax"] - row["AccMin"]
@@ -45,7 +45,7 @@ def global_results():
             (x_center_range, y_center_range), width_range, height_range,
             color=color_map[row["Model"]], alpha=0.4, label=f"{row['Model']} Range"
         )
-        plt.gca().add_patch(ellipse_range)
+        plt.gca().add_patch(ellipse_range)"""
 
         # Ellipse 2: Standard Deviation around the Mean
         x_center_mean = row["AccMean"]
