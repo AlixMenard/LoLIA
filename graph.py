@@ -61,7 +61,7 @@ def global_results():
         plt.gca().add_patch(ellipse_std)
 
         # Add model name at the center of the range ellipse
-        plt.text(x_center_range, y_center_range, row["Model"], color="black", ha="center", va="center", fontsize=10)
+        plt.text(x_center_mean, y_center_mean, row["Model"], color="black", ha="center", va="center", fontsize=10)
 
     # Aesthetics
     plt.title("Model Accuracy vs MSE with Ranges", fontsize=16)
