@@ -84,7 +84,7 @@ class NeuralNetwork(nn.Module):
             mse = ((pred - y)**2).mean().item()
             correct = (predicted == y).sum().item()
             accuracy = 100 * correct / len(y)
-            print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, MSE : {mse:>8f}")
+            #print(f"Test Error: Accuracy: {(accuracy):>0.1f}%, MSE : {mse:>8f}")
         return accuracy, mse
 
     def format(self, train, val):
