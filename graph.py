@@ -31,7 +31,8 @@ def global_results():
     plt.figure(figsize=(10, 6))
 
     # Define colors for models
-    colors = ["red", "blue", "green", "orange", "purple"] * 5 # Extend if you have more models
+    cmap = plt.cm.get_cmap("tab10", 10)  # "tab10" is a good default choice
+    colors = [cmap(i) for i in range(cmap.N)]
     color_map = {model: color for model, color in zip(stats["Model"], colors)}
 
     for _, row in stats.iterrows():
@@ -55,13 +56,13 @@ def global_results():
 
         ellipse_std = Ellipse(
             (x_center_mean, y_center_mean), width_std, height_std,
-            edgecolor=color_map[row["Model"]], facecolor="none", linestyle="--", linewidth=1.5,
-            alpha=0.8
+            edgecolor=color_map[row["Model"]], facecolor="none", linestyle="-", linewidth=1.5,
+            alpha=0.8, label=f"{row['Model'][:-4]}"
         )
         plt.gca().add_patch(ellipse_std)
 
         # Add model name at the center of the range ellipse
-        plt.text(x_center_mean, y_center_mean, row["Model"], color="black", ha="center", va="center", fontsize=10)
+        plt.text(x_center_mean, y_center_mean, row["Model"], color=color_map[row["Model"]], ha="center", va="center", fontsize=10)
 
     # Aesthetics
     plt.title("Model Accuracy vs MSE with Ranges", fontsize=16)
@@ -69,8 +70,8 @@ def global_results():
     plt.ylabel("MSE", fontsize=12)
     plt.legend(title="Model", loc="lower left")
     plt.grid(True)
-    plt.xlim(0.65, 0.8)  # Adjust based on your data
-    plt.ylim(0.15, 0.35)  # Adjust based on your data
+    plt.xlim(0.55, 0.925)  # Adjust based on your data
+    plt.ylim(0.075, 0.4)  # Adjust based on your data
     plt.show()
 
 def timelessness(model_type):
