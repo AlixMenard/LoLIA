@@ -539,7 +539,7 @@ def curate():
 
 
 if __name__ == "__main__":
-    leagues = ["lck", "lpl", "msi"]
+    leagues = ["msi"]
     years = [2022, 2023, 2024]
     years.reverse()
     #print("Curating...", end="")
