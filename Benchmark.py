@@ -264,19 +264,19 @@ def stability(model_type):
 
 
 if __name__ == "__main__":
-    print(Fore.red + "Global :" + Style.RESET_ALL)
+    print(Fore.RED + "Global :" + Style.RESET_ALL)
     global_results()
     models = models[:-1]
     print("\n"*3)
     for m_t in models:
-        print(Fore.red + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
+        print(Fore.RED + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
         timelessness(m_t)
         print("\n"*3)
-        print(Fore.red + f"CR compatibility {m_t.name} :" + Style.RESET_ALL)
+        print(Fore.RED + f"CR compatibility {m_t.name} :" + Style.RESET_ALL)
         cross_region_compatibility(m_t)
         print("\n"*3)
     models.pop(1)
     for m_t in models:
-        print(Fore.red + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
+        print(Fore.RED + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
         stability(m_t)
         print("\n"*3)
