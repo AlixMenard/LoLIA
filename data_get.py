@@ -99,7 +99,7 @@ def get_random_matches(n=1):
     cur = con.cursor()
     sql_query = """SELECT name FROM sqlite_master  WHERE type='table';"""
     cur.execute(sql_query)
-    tables = [t[0] for t in cur.fetchall() if t[0] != "game_ids"]
+    tables = [t[0] for t in cur.fetchall() if t[0] != "game_ids" and t[0] != "lpl"]
 
     matches = []
     for _ in range(n):

@@ -141,15 +141,15 @@ def stability(model_type):
 
     plt.plot(averages, energies, "x")
     plt.title("Relative energy of high frequency variations\nvs\nAverage winning probabilty (game based)", fontsize=10)
-    plt.xlabel("Relative energy of high frequency variations", fontsize=10)
-    plt.ylabel("Average winning probability", fontsize=10)
+    plt.ylabel("Relative energy of high frequency variations", fontsize=10)
+    plt.xlabel("Average winning probability", fontsize=10)
     plt.tight_layout()
     plt.show()
 
     plt.plot(deltas, energies, "x")
     plt.title("Relative energy of high frequency variations\nvs\nMaximum winning probability variation (game based)", fontsize=10)
-    plt.xlabel("Relative energy of high frequency variations", fontsize=10)
-    plt.ylabel("Maximum winning probability variation", fontsize=10)
+    plt.ylabel("Relative energy of high frequency variations", fontsize=10)
+    plt.xlabel("Maximum winning probability variation", fontsize=10)
     plt.tight_layout()
     plt.show()
 

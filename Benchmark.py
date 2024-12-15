@@ -15,7 +15,7 @@ models = [Dense.NeuralNetwork, RNN.SimpleRNN, random_forest.RandomForest(), GBC.
 
 def global_results():
 
-    if os.path.exists("data/benchmarks/benchmark_acc.csv") and os.path.exists("data/benchmarks/benchmark_loss.csv"):
+    if os.path.exists("data/benchmarks/benchmark_acc.csv") and os.path.exists("data/benchmarks/benchmark_mse.csv"):
         return
 
     years = [2022, 2023, 2024]
@@ -192,7 +192,7 @@ def stability(model_type):
     if os.path.exists(fr"data/benchmarks/stability_{model_type.name}.csv"):
         return
 
-    matches = get_random_matches(200) #! 100
+    tches = get_random_matches(200) #! 100
     training = get_samples() #! default
     results = []
 
@@ -210,6 +210,7 @@ def stability(model_type):
             res = [float(i[0]) for i in model(m_x)]
             results.append(res)
         else:
+            m_x = m_x.cpu()
             res = model.predict_proba(m_x)[:,1]
             results.append(res)
 
@@ -251,14 +252,18 @@ def stability(model_type):
         positive_freqs = freqs[:half_N]
         positive_magnitude = np.abs(magnitudes[:half_N])
         positive_magnitude[0] /= N
+        if np.max(positive_magnitude) == 0:
+            results[i] = -1
+            continue
         normalized_magnitudes = positive_magnitude / np.max(positive_magnitude)
 
-        high_freq = np.where(positive_freqs>0.01)
+        high_freq = len(positive_freqs)//2
         #print(high_freq, positive_freqs[high_freq])
 
-        energy_ratio = np.sum(normalized_magnitudes[high_freq]**2) / np.sum(normalized_magnitudes**2)
+        energy_ratio = np.sum(normalized_magnitudes[high_freq:]**2) / np.sum(normalized_magnitudes**2)
         results[i] = energy_ratio
 
+    results = [i for i in results if i != -1]
     """plt.plot(averages, results, ".")
     plt.show()
     plt.plot(deltas, results, ".")
@@ -284,6 +289,7 @@ if __name__ == "__main__":
     print(Fore.RED + "Global :" + Style.RESET_ALL)
     global_results()
     models = models[:-1]
+    models.pop(1)
     print("\n"*3)
     for m_t in models:
         print(Fore.RED + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
@@ -292,8 +298,7 @@ if __name__ == "__main__":
         print(Fore.RED + f"CR compatibility {m_t.name} :" + Style.RESET_ALL)
         cross_region_compatibility(m_t)
         print("\n"*3)
-    models.pop(1)
     for m_t in models:
-        print(Fore.RED + f"Timelessness {m_t.name} :" + Style.RESET_ALL)
+        print(Fore.RED + f"stability {m_t.name} :" + Style.RESET_ALL)
         stability(m_t)
         print("\n"*3)
